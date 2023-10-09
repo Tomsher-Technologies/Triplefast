@@ -17,7 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use Hash;
 
 class HomeController extends Controller
-{
+{ 
     public function dashboard()
     {
         if(Auth::check()){
