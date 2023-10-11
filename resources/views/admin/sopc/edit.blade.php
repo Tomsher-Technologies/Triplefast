@@ -41,6 +41,7 @@
                                         <div class="add-product__body px-sm-40 px-20 row">
                                             <!-- Start: form -->
                                                 <!-- form group -->
+                                                <input type="hidden" name="permission" id="permission" value="{{ auth()->user()->can('sopc-edit-dates') }}">
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">SO Number<span class="required">*</span></label>
                                                     <input type="text" class="form-control" id="so_number" name="so_number" placeholder="Enter SO Number" value="{{ old('so_number', $sopc->so_number) }}" readonly>
@@ -143,35 +144,35 @@
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Machining</label>
-                                                    <input type="text" class="form-control date-picker" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining', $machining) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining', $machining) }}">
                                                 </div>
                                                 @php        
                                                     $heat_treatment = ($sopc->heat_treatment != '') ? date('d-M-Y', strtotime($sopc->heat_treatment)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Heat Treatment</label>
-                                                    <input type="text" class="form-control date-picker" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment', $heat_treatment) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment', $heat_treatment) }}">
                                                 </div>
                                                 @php        
                                                     $s1_date = ($sopc->s1_date != '') ? date('d-M-Y', strtotime($sopc->s1_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">S1</label>
-                                                    <input type="text" class="form-control date-picker" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date', $s1_date) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date', $s1_date) }}">
                                                 </div>
                                                 @php        
                                                     $subcon = ($sopc->subcon != '') ? date('d-M-Y', strtotime($sopc->subcon)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Subcon</label>
-                                                    <input type="text" class="form-control date-picker" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon', $subcon) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon', $subcon) }}">
                                                 </div>
                                                 @php        
                                                     $stock = ($sopc->stock != '') ? date('d-M-Y', strtotime($sopc->stock)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Stock</label>
-                                                    <input type="text" class="form-control date-picker" id="stock" name="stock" placeholder="DD-MM-YYYY" value="{{ old('stock', $stock) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="stock" name="stock" placeholder="DD-MM-YYYY" value="{{ old('stock', $stock) }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
@@ -219,19 +220,22 @@
     .add-product__body {
         padding: 10px 28px;
     }
-    
+    input:read-only {
+        pointer-events : none !important;
+    }
 </style>
 @endsection
 @section('footer')
 <script src="{{ asset('assets/vendor_assets/js/jquery.repeater.min.js') }}"></script>
 <script src="{{ asset('assets/vendor_assets/js/jquery/jquery.validate.min.js') }}"></script>
 <script type="text/javascript">
+    
     let issueDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
                                 dateFormat: "dd-M-yy",
                                 changeMonth: true,
-                                changeYear: true,
+                                changeYear: true
                             };
         $("#issue_date,.date-picker").datepicker(datePickerOptions);
         $("#enter_date").datepicker( {
@@ -245,6 +249,15 @@
             issueDate = $('#issue_date').val();
             $(".date-picker").datepicker( "option", "minDate", new Date(issueDate) );
         });
+
+        var permissionCheck = $('#permission').val();
+        
+        if(permissionCheck != 1){
+            // alert('no permission');
+            $(".date-permission").datepicker().attr('readonly','readonly');    
+        }
+
+
 
         $('#customer_id').select2({
             minimumInputLength: 2,

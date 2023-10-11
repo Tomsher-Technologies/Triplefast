@@ -20,7 +20,7 @@
         @endphp
         <div class="navbar-right">
             <ul class="navbar-right__menu">
-                @if(Auth::user()->user_type == 4)
+                
                 <li class="nav-notification">
                     <div class="dropdown-custom">
                         @if($count != 0)
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </li>
-                @endif
+                
                 <!-- ends: .nav-notification -->
                 
                 <!-- ends: .nav-flag-select -->

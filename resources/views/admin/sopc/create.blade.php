@@ -41,6 +41,7 @@
                                             <!-- Start: form -->
                                                 <!-- form group -->
                                                 <div class="form-group col-sm-6">
+                                                    <input type="hidden" name="permission" id="permission" value="{{ auth()->user()->can('sopc-edit-dates') }}">
                                                     <label for="name1">SO Number<span class="required">*</span></label>
                                                     <input type="text" class="form-control" id="so_number" name="so_number" placeholder="Enter SO Number" value="{{ old('so_number') }}">
                                                     <x-input-error name='so_number'/>
@@ -127,27 +128,27 @@
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Machining</label>
-                                                    <input type="text" class="form-control date-picker" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Heat Treatment</label>
-                                                    <input type="text" class="form-control date-picker" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">S1</label>
-                                                    <input type="text" class="form-control date-picker" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Subcon</label>
-                                                    <input type="text" class="form-control date-picker" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Stock</label>
-                                                    <input type="text" class="form-control date-picker" id="stock" name="stock" placeholder="DD-MM-YYYY" value="{{ old('stock') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="stock" name="stock" placeholder="DD-MM-YYYY" value="{{ old('stock') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
@@ -195,7 +196,9 @@
     .add-product__body {
         padding: 10px 28px;
     }
-    
+    input:read-only {
+        pointer-events : none !important;
+    }
 </style>
 @endsection
 @section('footer')
@@ -221,6 +224,12 @@
             issueDate = $('#issue_date').val();
             $(".date-picker").datepicker( "option", "minDate", new Date(issueDate) );
         });
+
+        var permissionCheck = $('#permission').val();
+        
+        if(permissionCheck != 1){
+            $(".date-permission").datepicker().attr('readonly','readonly');    
+        }
 
         $('#customer_id').select2({
             minimumInputLength: 2,
