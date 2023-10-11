@@ -16,7 +16,7 @@
                         <div class="edit-profile__body">
                             <div class="form-group mb-20">
                                 <label for="email">Email</label>
-                                <input type="text" class="form-control" id="email" name="Email" placeholder="email" value="{{ old('email') }}" autocomplete="off">
+                                <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="{{ old('email') }}" autocomplete="off">
                                 @if ($errors->has('email'))
                                     <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif
