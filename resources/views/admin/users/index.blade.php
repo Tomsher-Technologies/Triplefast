@@ -95,9 +95,7 @@
                                 <th>
                                     <span class="userDatatable-title">Email</span>
                                 </th>
-                                <th>
-                                    <span class="userDatatable-title">Phone Number</span>
-                                </th>
+                               
                                 <th>
                                     <span class="userDatatable-title">Status</span>
                                 </th>
@@ -144,11 +142,7 @@
                                         {{ $user->email }}
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="userDatatable-content">
-                                        {{ $user->user_details->phone_number ?? '' }}
-                                    </div>
-                                </td>
+                                
 
                                 <td>
                                     <div class="userDatatable-content">
