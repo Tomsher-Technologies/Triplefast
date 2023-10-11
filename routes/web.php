@@ -80,4 +80,5 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/sopc-status-store', [ReportController::class, 'storeStatus'])->name('sopc.status-store');
 
     Route::get('/notifications', [HomeController::class, 'notifications'])->name('notifications');
+    Route::get('/cron', [ReportController::class, 'cron'])->name('cron');
 });
