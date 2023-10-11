@@ -16,7 +16,7 @@
                         <div class="edit-profile__body">
                             <div class="form-group mb-20">
                                 <label for="email">Email</label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="email" value="{{ old('email') }}" autocomplete="off">
+                                <input type="text" class="form-control" id="email" name="Email" placeholder="email" value="{{ old('email') }}" autocomplete="off">
                                 @if ($errors->has('email'))
                                     <span class="text-danger">{{ $errors->first('email') }}</span>
                                 @endif
@@ -24,7 +24,7 @@
                             <div class="form-group mb-15">
                                 <label for="password">password</label>
                                 <div class="position-relative">
-                                    <input id="password" type="password" autocomplete="new-password"  class="form-control" name="password" value="{{ old('password') }}">
+                                    <input id="password" type="password" placeholder="Password" autocomplete="new-password"  class="form-control" name="password" value="{{ old('password') }}">
                                     <div class=" text-light fs-16 field-icon toggle-password2">
                                         <span class="show-pass eye">
                                             <i class="fa fa-eye-slash"></i>
