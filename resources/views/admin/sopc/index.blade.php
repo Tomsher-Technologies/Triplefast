@@ -124,25 +124,25 @@
                                 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($report->issue_date != '') ? date('d-M-Y',strtotime($report->issue_date)) : '' }}
+                                        {{ ($report->issue_date != '') ? date('d-m-Y',strtotime($report->issue_date)) : '' }}
                                     </div>
                                 </td>
 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($report->started_date != '') ? date('d-M-Y',strtotime($report->started_date)) : '' }}
+                                        {{ ($report->started_date != '') ? date('d-m-Y',strtotime($report->started_date)) : '' }}
                                     </div>
                                 </td>
 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($report->target_date != '') ? date('d-M-Y',strtotime($report->target_date)) : ''}}
+                                        {{ ($report->target_date != '') ? date('d-m-Y',strtotime($report->target_date)) : ''}}
                                     </div>
                                 </td>
 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($report->completed_date != '') ? date('d-M-Y',strtotime($report->completed_date)) : ''}}
+                                        {{ ($report->completed_date != '') ? date('d-m-Y',strtotime($report->completed_date)) : ''}}
                                     </div>
                                 </td>
 

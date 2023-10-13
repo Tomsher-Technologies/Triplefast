@@ -53,15 +53,15 @@
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Enter Date</span>
-                                                            <p>{{ ($sopc->enter_date != '') ? date('d-M-Y',strtotime($sopc->enter_date)) : '' }}</p>
+                                                            <p>{{ ($sopc->enter_date != '') ? date('d-m-Y',strtotime($sopc->enter_date)) : '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Issue Date</span>
-                                                            <p>{{ ($sopc->issue_date != '') ? date('d-M-Y',strtotime($sopc->issue_date)) : '' }}</p>
+                                                            <p>{{ ($sopc->issue_date != '') ? date('d-m-Y',strtotime($sopc->issue_date)) : '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Started Date</span>
-                                                            <p>{{ ($sopc->started_date != '') ? date('d-M-Y',strtotime($sopc->started_date)) : '' }}</p>
+                                                            <p>{{ ($sopc->started_date != '') ? date('d-m-Y',strtotime($sopc->started_date)) : '' }}</p>
                                                         </td>
                                                         
                                                     </tr>
@@ -69,16 +69,16 @@
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Due  Date</span>
-                                                            <p>{{ ($sopc->due_date != '') ? date('d-M-Y',strtotime($sopc->due_date)) : '' }}</p>
+                                                            <p>{{ ($sopc->due_date != '') ? date('d-m-Y',strtotime($sopc->due_date)) : '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Target Date</span>
-                                                            <p>{{ ($sopc->target_date != '') ? date('d-M-Y',strtotime($sopc->target_date)) : ''}}</p>
+                                                            <p>{{ ($sopc->target_date != '') ? date('d-m-Y',strtotime($sopc->target_date)) : ''}}</p>
                                                         </td>
 
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Completed Date</span>
-                                                            <p>{{ ($sopc->completed_date != '') ? date('d-M-Y',strtotime($sopc->completed_date)) : ''}}</p>
+                                                            <p>{{ ($sopc->completed_date != '') ? date('d-m-Y',strtotime($sopc->completed_date)) : ''}}</p>
                                                         </td>
                                                        
                                                     </tr>
@@ -93,7 +93,7 @@
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Machining</span>
-                                                            <p>{{ ($sopc->machining != '') ? date('d-M-Y',strtotime($sopc->machining)) : '' }}</p>
+                                                            <p>{{ ($sopc->machining != '') ? date('d-m-Y',strtotime($sopc->machining)) : '' }}</p>
                                                         </td>
                                                     </tr>
 
@@ -101,16 +101,16 @@
                                                        
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Heat Treatment</span>
-                                                            <p>{{ ($sopc->heat_treatment != '') ? date('d-M-Y',strtotime($sopc->heat_treatment)) : '' }}</p>
+                                                            <p>{{ ($sopc->heat_treatment != '') ? date('d-m-Y',strtotime($sopc->heat_treatment)) : '' }}</p>
                                                         </td>
 
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">S1</span>
-                                                            <p>{{ ($sopc->s1_date != '') ? date('d-M-Y',strtotime($sopc->s1_date)) : '' }}</p>
+                                                            <p>{{ ($sopc->s1_date != '') ? date('d-m-Y',strtotime($sopc->s1_date)) : '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Subcon</span>
-                                                            <p>{{ ($sopc->subcon != '') ? date('d-M-Y',strtotime($sopc->subcon)) : '' }}</p>
+                                                            <p>{{ ($sopc->subcon != '') ? date('d-m-Y',strtotime($sopc->subcon)) : '' }}</p>
                                                         </td>
                                                     </tr>
 
@@ -118,7 +118,7 @@
                                                         
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Stock</span>
-                                                            <p>{{ ($sopc->stock != '') ? date('d-M-Y',strtotime($sopc->stock)) : '' }}</p>
+                                                            <p>{{ ($sopc->stock != '') ? date('d-m-Y',strtotime($sopc->stock)) : '' }}</p>
                                                         </td>
 
                                                         <td class="order-td col-sm-4">

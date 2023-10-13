@@ -42,17 +42,9 @@
                                             @csrf
                                             <!-- form group -->
                                             <div class="form-group">
-                                                <label for="name1">First Name<span class="required">*</span></label>
-                                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name" value="{{ old('first_name', $customer->first_name) }}">
-                                                @error('first_name')
-                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="name1">Last Name<span class="required">*</span></label>
-                                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter Last Name" value="{{ old('last_name', $customer->last_name) }}">
-                                                @error('last_name')
+                                                <label for="name1">Customer Name<span class="required">*</span></label>
+                                                <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Enter Customer Name" value="{{ old('customer_name', $customer->first_name) }}">
+                                                @error('customer_name')
                                                     <div class="alert alert-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -67,27 +59,27 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="email">Email<span class="required">*</span></label>
+                                                <label for="email">Email</label>
                                                 <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="{{ old('email', $customer->email) }}">
-                                                @error('email')
+                                                <!-- @error('email')
                                                     <div class="alert alert-danger">{{ $message }}</div>
-                                                @enderror
+                                                @enderror -->
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="phone_number">Phone Number<span class="required">*</span></label>
+                                                <label for="phone_number">Phone Number</label>
                                                 <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter Phone Number" value="{{ old('phone_number', $customer->phone_number) }}">
-                                                @error('phone_number')
+                                                <!-- @error('phone_number')
                                                     <div class="alert alert-danger">{{ $message }}</div>
-                                                @enderror
+                                                @enderror -->
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="address">Address<span class="required">*</span></label>
+                                                <label for="address">Address</label>
                                                 <textarea class="form-control ckeditor" id="address" name="address" placeholder="Enter Address" >{{ old('address', $customer->address) }}</textarea>
-                                                @error('address')
+                                                <!-- @error('address')
                                                     <div class="alert alert-danger">{{ $message }}</div>
-                                                @enderror
+                                                @enderror -->
                                             </div>
 
                                             <div class="form-group">
@@ -106,13 +98,13 @@
                                 </div>
                                 <!-- End: card -->
 
-                                <div class="card add-product p-sm-30 p-20 ">
+                                <!-- <div class="card add-product p-sm-30 p-20 ">
                                     <div class="card-body p-0">
                                         <div class="card-header">
                                             <h6 class="fw-500">Shipping Address</h6>
                                         </div>
                                         <div data-repeater-list="shipping">
-                                        <!-- Start: product body -->
+                                        
                                             <div data-repeater-item class="mt-3 px-sm-40 px-20">
                                                 <div class="form-group">
                                                     <label for="shipping_address">Address</label>
@@ -126,14 +118,14 @@
                                                     <input data-repeater-delete class="btn btn-danger" type="button" value="Delete" />
                                                 </div>
                                             </div>
-                                        <!-- End: product body -->
+                                       
                                         </div>
                                         <div class=" px-sm-40 px-20">
                                             <input data-repeater-create class="btn btn-primary my-3" type="button" value="Add New Address" />
                                         </div>
                                     </div>
                                     
-                                </div>
+                                </div> -->
 
                                 <div class="button-group add-product-btn d-flex justify-content-end mt-40">
                                     <button class="btn btn-primary btn-default btn-squared text-capitalize" type="submit">Save

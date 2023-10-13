@@ -156,7 +156,7 @@ class OrdersController extends Controller
             $arr['quantity'] = $i->quantity;
             $arr['part_description'] = $i->description;
             $arr['rev'] = $i->rev;
-            $arr['line_need_by_date'] = date('d-M-Y', strtotime($i->need_by_date));
+            $arr['line_need_by_date'] = date('d-m-Y', strtotime($i->need_by_date));
             $order_parts[] = $arr;
         }
 

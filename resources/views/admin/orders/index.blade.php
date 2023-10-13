@@ -131,7 +131,7 @@
 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ date('d-M-Y',strtotime($order->order_date)) }}
+                                        {{ date('d-m-Y',strtotime($order->order_date)) }}
                                     </div>
                                 </td>
 
@@ -149,7 +149,7 @@
                                 
                                 <td class="text-center">
                                     <div class="userDatatable-content">
-                                    {{ date('d-M-Y',strtotime($order->ship_by_date)) }}
+                                    {{ date('d-m-Y',strtotime($order->ship_by_date)) }}
                                     </div>
                                 </td>
 

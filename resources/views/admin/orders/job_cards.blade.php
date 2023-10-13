@@ -497,10 +497,10 @@
 <script type="text/javascript">
     
         var datePickerOptions = {
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
-                                minDate: '{{ date("d-M-Y", strtotime($order[0]->order_date)) }}'
+                                minDate: '{{ date("d-m-Y", strtotime($order[0]->order_date)) }}'
                             };
         $("#due_date,#start_date, #need_date,#req_date").datepicker(datePickerOptions);
 

@@ -48,7 +48,7 @@
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Order Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control" disabled id="order_date" name="order_date" placeholder="DD-MM-YYYY" value="{{ date('d-M-Y', strtotime($order->order_date)) ?? ''}}">
+                                                    <input type="text" class="form-control" disabled id="order_date" name="order_date" placeholder="DD-MM-YYYY" value="{{ date('d-m-Y', strtotime($order->order_date)) ?? ''}}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
@@ -71,12 +71,12 @@
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Need By Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="need_by_date" name="need_by_date" placeholder="DD-MM-YYYY" value="{{ date('d-M-Y', strtotime($order->need_by_date)) ?? ''}}">
+                                                    <input type="text" class="form-control date-picker" id="need_by_date" name="need_by_date" placeholder="DD-MM-YYYY" value="{{ date('d-m-Y', strtotime($order->need_by_date)) ?? ''}}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Ship By Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="ship_by_date" name="ship_by_date" placeholder="DD-MM-YYYY" value="{{ date('d-M-Y', strtotime($order->ship_by_date)) ?? ''}}">
+                                                    <input type="text" class="form-control date-picker" id="ship_by_date" name="ship_by_date" placeholder="DD-MM-YYYY" value="{{ date('d-m-Y', strtotime($order->ship_by_date)) ?? ''}}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
@@ -213,7 +213,7 @@
     let orderDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 minDate:  new Date('{{$order->order_date}}')
@@ -404,7 +404,7 @@
         $("#line_need_by_date"+count).rules('add', { required: true });
 
         $(".dynamic_date").removeClass('hasDatepicker').datepicker({
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 minDate:  new Date('{{$order->order_date}}')

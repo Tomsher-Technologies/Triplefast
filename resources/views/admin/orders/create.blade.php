@@ -207,7 +207,7 @@
     let orderDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
                             };
@@ -383,7 +383,7 @@
         $("#line_need_by_date"+count).rules('add', { required: true });
 
         $(".dynamic_date").removeClass('hasDatepicker').datepicker({
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
                             });

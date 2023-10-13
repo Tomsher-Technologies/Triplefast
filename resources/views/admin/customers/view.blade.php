@@ -53,12 +53,12 @@
                         <p class="user-content-info__item">
                             <label class="il-gray fs-14 fw-400 align-center"> Created Date : </label>
                             <label class="il-gray fs-16 fw-500 align-center ml-3">
-                                {{ (isset($customer[0]->created_at)) ? date('d M, Y', strtotime($customer[0]->created_at)) : '' }}</label>
+                                {{ (isset($customer[0]->created_at)) ? date('d-m-Y', strtotime($customer[0]->created_at)) : '' }}</label>
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="user-skils border-bottom">
+            <!-- <div class="user-skils border-bottom">
                 <div class="card-header border-bottom-0 pt-sm-25 pb-sm-0  px-md-25 px-3">
                     <div class="profile-header-title">
                         Shipping Addresses
@@ -84,7 +84,7 @@
                         @endif
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

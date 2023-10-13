@@ -75,7 +75,7 @@
                                 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($not->created_at) ? date('d-M-Y H:i a',strtotime($not->created_at)) : '' }}
+                                        {{ ($not->created_at) ? date('d-m-Y H:i a',strtotime($not->created_at)) : '' }}
                                         
                                     </div>
                                 </td>
@@ -117,10 +117,10 @@
     
 
     $("#date_search").datepicker({
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
-                                maxDate: '{{ date("d-M-Y") }}'
+                                maxDate: '{{ date("d-m-Y") }}'
                             });
 
 </script>

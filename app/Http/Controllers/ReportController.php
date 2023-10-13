@@ -69,7 +69,7 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'so_number'     => 'required',
+            'so_number'     => 'required|unique:sopc_reports,so_number',
             'enter_date'    => 'required',
             'issue_date'    => 'required',
             'started_date'  => 'required',

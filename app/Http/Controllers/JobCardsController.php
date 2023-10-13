@@ -183,7 +183,7 @@ class JobCardsController extends Controller
         $id = $request->id;
         $orderParts = SalesOrderParts::where('id', $id)->first()->toArray();
 
-        $orderParts['need_by_date'] = date('d-M-Y', strtotime($orderParts['need_by_date']));
+        $orderParts['need_by_date'] = date('d-m-Y', strtotime($orderParts['need_by_date']));
         return json_encode($orderParts);
     }
 
@@ -194,10 +194,10 @@ class JobCardsController extends Controller
                         ->where('is_deleted',0)
                         ->where('id', $id)->get()->toArray();
 
-        $card[0]['due_date_format'] = date('d-M-Y', strtotime($card[0]['due_date']));
-        $card[0]['start_date_format'] = date('d-M-Y', strtotime($card[0]['start_date']));
-        $card[0]['need_by_date_format'] = date('d-M-Y', strtotime($card[0]['need_by_date']));
-        $card[0]['req_date_format'] = date('d-M-Y', strtotime($card[0]['req_date']));
+        $card[0]['due_date_format'] = date('d-m-Y', strtotime($card[0]['due_date']));
+        $card[0]['start_date_format'] = date('d-m-Y', strtotime($card[0]['start_date']));
+        $card[0]['need_by_date_format'] = date('d-m-Y', strtotime($card[0]['need_by_date']));
+        $card[0]['req_date_format'] = date('d-m-Y', strtotime($card[0]['req_date']));
         
         return json_encode($card);
     }
