@@ -48,7 +48,7 @@
                                                     <x-input-error name='so_number'/>
                                                 </div>
                                                 @php        
-                                                    $enter_date = ($sopc->enter_date != '') ? date('d-M-Y', strtotime($sopc->enter_date)) : '';
+                                                    $enter_date = ($sopc->enter_date != '') ? date('d-m-Y', strtotime($sopc->enter_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Enter Date<span class="required">*</span></label>
@@ -56,7 +56,7 @@
                                                     <x-input-error name='enter_date'/>
                                                 </div>
                                                 @php        
-                                                    $issue_date = ($sopc->issue_date != '') ? date('d-M-Y', strtotime($sopc->issue_date)) : '';
+                                                    $issue_date = ($sopc->issue_date != '') ? date('d-m-Y', strtotime($sopc->issue_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Issue Date<span class="required">*</span></label>
@@ -64,7 +64,7 @@
                                                     <x-input-error name='issue_date'/>
                                                 </div>
                                                 @php        
-                                                    $started_date = ($sopc->started_date != '') ? date('d-M-Y', strtotime($sopc->started_date)) : '';
+                                                    $started_date = ($sopc->started_date != '') ? date('d-m-Y', strtotime($sopc->started_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Started Date<span class="required">*</span></label>
@@ -72,7 +72,7 @@
                                                     <x-input-error name='started_date'/>
                                                 </div>
                                                 @php        
-                                                    $due_date = ($sopc->due_date != '') ? date('d-M-Y', strtotime($sopc->due_date)) : '';
+                                                    $due_date = ($sopc->due_date != '') ? date('d-m-Y', strtotime($sopc->due_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Due Date<span class="required">*</span></label>
@@ -80,7 +80,7 @@
                                                     <x-input-error name='due_date'/>
                                                 </div>
                                                 @php        
-                                                    $target_date = ($sopc->target_date != '') ? date('d-M-Y', strtotime($sopc->target_date)) : '';
+                                                    $target_date = ($sopc->target_date != '') ? date('d-m-Y', strtotime($sopc->target_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Target Date<span class="required">*</span></label>
@@ -88,7 +88,7 @@
                                                     <x-input-error name='target_date'/>
                                                 </div>
                                                 @php        
-                                                    $completed_date = ($sopc->completed_date != '') ? date('d-M-Y', strtotime($sopc->completed_date)) : '';
+                                                    $completed_date = ($sopc->completed_date != '') ? date('d-m-Y', strtotime($sopc->completed_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Completed Date</label>
@@ -140,35 +140,35 @@
                                                     <x-input-error name='job_status'/>
                                                 </div>
                                                 @php        
-                                                    $machining = ($sopc->machining != '') ? date('d-M-Y', strtotime($sopc->machining)) : '';
+                                                    $machining = ($sopc->machining != '') ? date('d-m-Y', strtotime($sopc->machining)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Machining</label>
                                                     <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining', $machining) }}">
                                                 </div>
                                                 @php        
-                                                    $heat_treatment = ($sopc->heat_treatment != '') ? date('d-M-Y', strtotime($sopc->heat_treatment)) : '';
+                                                    $heat_treatment = ($sopc->heat_treatment != '') ? date('d-m-Y', strtotime($sopc->heat_treatment)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Heat Treatment</label>
                                                     <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment', $heat_treatment) }}">
                                                 </div>
                                                 @php        
-                                                    $s1_date = ($sopc->s1_date != '') ? date('d-M-Y', strtotime($sopc->s1_date)) : '';
+                                                    $s1_date = ($sopc->s1_date != '') ? date('d-m-Y', strtotime($sopc->s1_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">S1</label>
                                                     <input type="text" class="form-control date-picker date-permission" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date', $s1_date) }}">
                                                 </div>
                                                 @php        
-                                                    $subcon = ($sopc->subcon != '') ? date('d-M-Y', strtotime($sopc->subcon)) : '';
+                                                    $subcon = ($sopc->subcon != '') ? date('d-m-Y', strtotime($sopc->subcon)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Subcon</label>
                                                     <input type="text" class="form-control date-picker date-permission" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon', $subcon) }}">
                                                 </div>
                                                 @php        
-                                                    $stock = ($sopc->stock != '') ? date('d-M-Y', strtotime($sopc->stock)) : '';
+                                                    $stock = ($sopc->stock != '') ? date('d-m-Y', strtotime($sopc->stock)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Stock</label>
@@ -233,13 +233,13 @@
     let issueDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true
                             };
         $("#issue_date,.date-picker").datepicker(datePickerOptions);
         $("#enter_date").datepicker( {
-                                dateFormat: "dd-M-yy",
+                                dateFormat: "dd-m-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 maxDate: new Date()

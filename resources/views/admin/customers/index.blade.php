@@ -105,21 +105,13 @@
                                     <span class="userDatatable-title">Sl No</span>
                                 </th>
                                 <th>
-                                    <span class="userDatatable-title">First Name</span>
+                                    <span class="userDatatable-title">Customer Name</span>
                                 </th>
-                                <th>
-                                    <span class="userDatatable-title">Last Name</span>
-                                </th>
+                                
                                 <th>
                                     <span class="userDatatable-title">Customer ID</span>
                                 </th>
                                 
-                                <th>
-                                    <span class="userDatatable-title">Email</span>
-                                </th>
-                                <th>
-                                    <span class="userDatatable-title">Phone Number</span>
-                                </th>
                                 
                                 <th>
                                     <span class="userDatatable-title">Status</span>
@@ -143,27 +135,11 @@
                                         {{ $custom->first_name }}
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="userDatatable-content">
-                                        {{ $custom->last_name }}
-                                    </div>
-                                </td>
+                                
                                 <td>
                                     <div class="userDatatable-content">
                                         {{ $custom->custom_id ?? '' }}
 
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ $custom->email }}
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="userDatatable-content">
-                                        {{ $custom->phone_number ?? '' }}
                                     </div>
                                 </td>
 
@@ -180,25 +156,20 @@
                                 <td>
                                     <ul class="orderDatatable_actions mb-0 d-flex flex-wrap"
                                         style="justify-content: center;">
-                                        @can('user-view')
+                                        @can('customer-view')
                                         <li>
                                             <a href="{{ route('customer.show',$custom->id) }}" class="view viewCustomer" title="View Customer" data-id="{{$custom->id}}">
                                                 <span data-feather="eye"></span></a>
                                         </li>
                                         @endcan
-                                        @can('user-edit')
+                                        @can('customer-edit')
                                         <li>
                                             <a href="{{ route('customer.edit', $custom->id) }}" title="Edit Customer"
                                                 class="edit"> <span data-feather="edit"></span></a>
                                         </li>
                                         @endcan
 
-                                        @can('user-delete')
-                                        <!-- <li>
-                                            <a href="#" class="remove deleteCustomer" data-id="{{$custom->id}}"
-                                                title="Delete Customer"> <span data-feather="trash-2"></span></a>
-                                        </li> -->
-                                        @endcan
+                                     
                                     </ul>
                                 </td>
                             </tr>

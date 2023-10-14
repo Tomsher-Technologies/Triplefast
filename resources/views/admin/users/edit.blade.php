@@ -105,6 +105,16 @@
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+
+                                    <div class="col-md-4 mb-20 px-15" id="emailNotification">
+                                        <label for="validationDefault01" class="il-gray fs-14 fw-500 align-center">Email Notification</label>
+                                        
+                                        <div class="custom-control custom-switch switch-primary switch-lg ">
+                                            <input type="checkbox" class="custom-control-input" id="switch-s3" name="notification" @if($user->email_notification == 1) checked @endif>
+                                            <label class="custom-control-label" for="switch-s3"></label>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div class="form-row mx-n15">
@@ -128,9 +138,23 @@
 
 @section('footer')
 <script type="text/javascript">
+
+    var usertype = '{{ $user->user_type }}';
+    if(usertype == 4){
+        $('#emailNotification').css('display','block');
+    }else{
+        $('#emailNotification').css('display','none');
+    }
     
     $('#user_type').on('change', function() {
         var userType = $(this).val();
+
+        if(userType == 4){
+            $('#emailNotification').css('display','block');
+        }else{
+            $('#emailNotification').css('display','none');
+        }
+
         $.ajax({
             url: "{{ route('ajax-roles') }}",
             type: "GET",

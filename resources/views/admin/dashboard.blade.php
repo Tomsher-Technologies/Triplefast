@@ -41,16 +41,22 @@
                                 <div class="ap-po-details ap-po-details--2 p-30 radius-xl bg-white d-flex justify-content-between mb-25">
                                     <div>
                                         <div class="overview-content overview-content3">
-                                            <div class="d-flex">
-                                                <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-primary">
-                                                    <span data-feather="users" class="nav-icon"></span>
-                                                </div>
-                                                <div>
-                                                    <h2>{{ $customers }}</h2>
-                                                    <p class="mb-3 mt-1">Total Customers</p>
-                                                    
-                                                </div>
-                                            </div>
+                                            @canany(['customer-list', 'customer-create', 'customer-edit','customer-view','customer.bulk-create'])
+                                                <a href="{{ route('customer.index') }}">
+                                            @endcanany      
+                                                    <div class="d-flex">
+                                                        <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-primary">
+                                                            <span data-feather="users" class="nav-icon"></span>
+                                                        </div>
+                                                        <div>
+                                                            <h2>{{ $customers }}</h2>
+                                                            <p class="mb-3 mt-1">Total Customers</p>
+                                                            
+                                                        </div>
+                                                    </div>
+                                            @canany(['customer-list', 'customer-create', 'customer-edit','customer-view','customer.bulk-create'])
+                                                </a>
+                                            @endcanany   
                                         </div>
                                     </div>
                                 </div>
@@ -62,15 +68,17 @@
                                     class="ap-po-details ap-po-details--2 p-30 radius-xl bg-white d-flex justify-content-between mb-25">
                                     <div>
                                         <div class="overview-content overview-content3">
-                                            <div class="d-flex">
-                                                <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-warning">
-                                                    <span data-feather="loader" class="nav-icon"></span>
+                                            <a href="{{ route('sopc.index',['status' => 2]) }}">
+                                                <div class="d-flex">
+                                                    <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-warning">
+                                                        <span data-feather="loader" class="nav-icon"></span>
+                                                    </div>
+                                                    <div>
+                                                        <h2>{{ $partial }}</h2>
+                                                        <p class="mb-3 mt-1">Partial SOPC</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h2>{{ $partial }}</h2>
-                                                    <p class="mb-3 mt-1">Partial SOPC</p>
-                                                </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -83,15 +91,17 @@
                                     class="ap-po-details ap-po-details--2 p-30 radius-xl bg-white d-flex justify-content-between mb-25">
                                     <div>
                                         <div class="overview-content overview-content3">
-                                            <div class="d-flex">
-                                                <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-dark">
-                                                    <span data-feather="shopping-bag" class="nav-icon"></span>
+                                            <a href="{{ route('sopc.index',['status' => 3]) }}">
+                                                <div class="d-flex">
+                                                    <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-dark">
+                                                        <span data-feather="shopping-bag" class="nav-icon"></span>
+                                                    </div>
+                                                    <div>
+                                                        <h2>{{ $hold }}</h2>
+                                                        <p class="mb-3 mt-1">Holded SOPC</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h2>{{ $hold }}</h2>
-                                                    <p class="mb-3 mt-1">Holded SOPC</p>
-                                                </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -102,15 +112,17 @@
                                 <div class="ap-po-details ap-po-details--2 p-30 radius-xl bg-white d-flex justify-content-between mb-25">
                                     <div>
                                         <div class="overview-content overview-content3">
-                                            <div class="d-flex">
-                                                <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-success">
-                                                    <span data-feather="box" class="nav-icon"></span>
+                                            <a href="{{ route('sopc.index',['status' => 4]) }}">
+                                                <div class="d-flex">
+                                                    <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-success">
+                                                        <span data-feather="box" class="nav-icon"></span>
+                                                    </div>
+                                                    <div>
+                                                        <h2>{{ $completed }}</h2>
+                                                        <p class="mb-3 mt-1">Completed SOPC</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h2>{{ $completed }}</h2>
-                                                    <p class="mb-3 mt-1">Completed SOPC</p>
-                                                </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -120,15 +132,17 @@
                                 <div class="ap-po-details ap-po-details--2 p-30 radius-xl bg-white d-flex justify-content-between mb-25">
                                     <div>
                                         <div class="overview-content overview-content3">
-                                            <div class="d-flex">
-                                                <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-danger">
-                                                <span data-feather="x-circle" class="nav-icon"></span>
+                                            <a href="{{ route('sopc.index',['status' => 5]) }}">
+                                                <div class="d-flex">
+                                                    <div class="revenue-chart-box__Icon mr-20 order-bg-opacity-danger">
+                                                    <span data-feather="x-circle" class="nav-icon"></span>
+                                                    </div>
+                                                    <div>
+                                                        <h2>{{ $cancelled }}</h2>
+                                                        <p class="mb-3 mt-1">Cancelled SOPC</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h2>{{ $cancelled }}</h2>
-                                                    <p class="mb-3 mt-1">Cancelled SOPC</p>
-                                                </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

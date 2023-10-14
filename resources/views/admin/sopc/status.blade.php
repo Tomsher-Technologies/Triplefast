@@ -26,7 +26,7 @@
             <!-- Start: product page -->
             <div class="global-shadow border px-sm-30 py-sm-50 px-0 py-20 bg-white radius-xl w-100 mb-40">
                 <div class="row justify-content-center">
-                    <div class="col-xl-10 col-lg-10">
+                    <div class="col-xl-12 col-lg-12">
                         <div class="mx-sm-30 mx-20 ">
                             <!-- Start: card -->
                             <div class="card add-product p-sm-30 p-20 mb-30">
@@ -47,9 +47,11 @@
                                                     <div class="col-sm-12">
                                                         <table class="table table-bordered">
                                                             <tr>
-                                                                <th class="middle-center w-20">Line Number</th>
-                                                                <th class="middle-center w-10">Status</th>
-                                                                <th class="middle-center w-70">Remarks</th>
+                                                                <th class="middle-center">Line Number</th>
+                                                                <th class="middle-center">Status</th>
+                                                                <th class="middle-center w-40">Remarks</th>
+                                                                <th class="middle-center ">Updated By</th>
+                                                                <th class="middle-center ">Updated Date</th>
                                                             </tr>
                                                             @foreach($items as $itm)
                                                                 <tr>
@@ -62,6 +64,12 @@
                                                                    
                                                                     <td>
                                                                         <textarea class="form-control" name="remark[{{$itm['id']}}-{{$itm['line_no']}}]" rows="2">{{ $itm['remark'] }}</textarea>
+                                                                    </td>
+                                                                    <td class="middle-center"> 
+                                                                        {{ $itm['updated_by']['name'] ?? '' }}
+                                                                    </td>
+                                                                    <td class="middle-center"> 
+                                                                        {{ ($itm['updated_at'] != NULL) ? date('d-m-Y', strtotime($itm['updated_at'])) : '' }}
                                                                     </td>
                                                                 </tr>
                                                             @endforeach

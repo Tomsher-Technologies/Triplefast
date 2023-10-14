@@ -38,7 +38,7 @@
                             </p>
                             <p class="user-content-info__item">
                                 <label class="il-gray fs-14 fw-400 align-center"> Created Date : </label> 
-                                <label class="il-gray fs-16 fw-500 align-center ml-3"> {{ (isset($role[0]->created_at)) ? date('d M, Y', strtotime($role[0]->created_at)) : '' }}</label> 
+                                <label class="il-gray fs-16 fw-500 align-center ml-3"> {{ (isset($role[0]->created_at)) ? date('d-m-Y', strtotime($role[0]->created_at)) : '' }}</label> 
                             </p>
                         </div>
                     </div>

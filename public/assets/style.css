@@ -5992,6 +5992,20 @@ ul {
   background-color: white;
 }
 
+.custom-switch.switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+  transform: translateX(1.4rem);
+}
+.custom-switch.switch-lg .custom-control-label:before {
+  width: 3.288rem;
+  height: 1.7rem;
+}
+.custom-switch.switch-lg .custom-control-label:after {
+  top: calc(0.0725rem + 3px);
+  width: calc(1.55rem - 1px);
+  height: calc(1.75rem - 6px);
+}
+
+
 .custom-switch.switch-md .custom-control-input:checked ~ .custom-control-label::after {
   transform: translateX(0.85rem);
 }

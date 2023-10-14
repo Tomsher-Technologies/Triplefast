@@ -39,7 +39,7 @@
                                         </span>
                                         <div class="timeline-single">
                                             <div class="timeline-single__days">
-                                                <span>{{ date('d-M-Y H:i a', strtotime($time['created_at'])) }}</span>
+                                                <span>{{ date('d-m-Y H:i a', strtotime($time['created_at'])) }}</span>
                                             </div>
                                             <div class="timeline-single__content">
                                                 <div class="d-flex justify-content-between align-content-center flex-wrap">

@@ -82,12 +82,11 @@ class CustomersController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'customer_name' => 'required',
             'customer_id' => 'required|unique:customers,custom_id',
-            'address' => 'required',
-            'email' => 'required|email|unique:customers,email',
-            'phone_number' => 'required|numeric'
+            // 'address' => 'required',
+            // 'email' => 'required|email|unique:customers,email',
+            // 'phone_number' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -96,24 +95,24 @@ class CustomersController extends Controller
 
 
         $custom = new Customers;
-        $custom->first_name = $request->first_name;
-        $custom->last_name = $request->last_name;
+        $custom->first_name = $request->customer_name;
+        // $custom->last_name = $request->last_name;
         $custom->custom_id = $request->customer_id;
-        $custom->email = $request->email;
-        $custom->phone_number = $request->phone_number;
-        $custom->address = $request->address;
+        $custom->email = $request->email ?? NULL;
+        $custom->phone_number = $request->phone_number ?? NULL;
+        $custom->address = $request->address ?? NULL;
         $custom->save();
         
         $customerId = $custom->id;
 
-        if ($request->shipping && $customerId) {
-            foreach ($request->shipping as $address) {
-                ShippingAddresses::create([
-                    'customer_id' => $customerId,
-                    'shipping_address' =>  $address['shipping_address']
-                ]);
-            }
-        }
+        // if ($request->shipping && $customerId) {
+        //     foreach ($request->shipping as $address) {
+        //         ShippingAddresses::create([
+        //             'customer_id' => $customerId,
+        //             'shipping_address' =>  $address['shipping_address']
+        //         ]);
+        //     }
+        // }
 
         return redirect()->route('customer.index')->with('success','Customer created successfully');
     }
@@ -162,12 +161,8 @@ class CustomersController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'customer_name' => 'required',
             'customer_id' => 'required|unique:customers,custom_id,'.$id,
-            'address' => 'required',
-            'email' => 'required|email|unique:customers,email,'.$id,
-            'phone_number' => 'required|numeric',
             'status' => 'required'
         ]);
 
@@ -176,44 +171,43 @@ class CustomersController extends Controller
         }
 
         $custom =  Customers::find($id);
-        $custom->first_name = $request->first_name;
-        $custom->last_name = $request->last_name;
+        $custom->first_name = $request->customer_name;
         $custom->custom_id = $request->customer_id;
-        $custom->email = $request->email;
-        $custom->phone_number = $request->phone_number;
-        $custom->address = $request->address;
+        $custom->email = $request->email ?? NULL;
+        $custom->phone_number = $request->phone_number ?? NULL;
+        $custom->address = $request->address ?? NULL;
         $custom->is_active = $request->status;
         $custom->save();
         
         $customerId = $custom->id;
 
-        $shippingOld = ShippingAddresses::where('customer_id', $id)->where('is_deleted',0)->get();
+        // $shippingOld = ShippingAddresses::where('customer_id', $id)->where('is_deleted',0)->get();
 
-        $idsOld = $idsNow = [];
+        // $idsOld = $idsNow = [];
 
-        foreach ($shippingOld as $i) {
-            $idsOld[] = $i->id;
-        }
+        // foreach ($shippingOld as $i) {
+        //     $idsOld[] = $i->id;
+        // }
 
-        if ($request->shipping && $customerId) {
-            foreach ($request->shipping as $add) {
-                if($add['shipping_id'] != '' && $add['shipping_id'] != 0){
-                    $idsNow[] = $add['shipping_id'];
-                    ShippingAddresses::where('id', $add['shipping_id'])->update(['shipping_address' => $add['shipping_address']]);
-                }else{
-                    ShippingAddresses::create([
-                        'customer_id' => $customerId,
-                        'shipping_address' =>  $add['shipping_address']
-                    ]);
-                }
-            }
-        }
-        if(!empty($idsOld)){
-            $differenceArray = array_diff($idsOld, $idsNow);
-            if(!empty($differenceArray)){
-                ShippingAddresses::whereIn('id',$differenceArray)->update(['is_deleted' => 1]);
-            }
-        }
+        // if ($request->shipping && $customerId) {
+        //     foreach ($request->shipping as $add) {
+        //         if($add['shipping_id'] != '' && $add['shipping_id'] != 0){
+        //             $idsNow[] = $add['shipping_id'];
+        //             ShippingAddresses::where('id', $add['shipping_id'])->update(['shipping_address' => $add['shipping_address']]);
+        //         }else{
+        //             ShippingAddresses::create([
+        //                 'customer_id' => $customerId,
+        //                 'shipping_address' =>  $add['shipping_address']
+        //             ]);
+        //         }
+        //     }
+        // }
+        // if(!empty($idsOld)){
+        //     $differenceArray = array_diff($idsOld, $idsNow);
+        //     if(!empty($differenceArray)){
+        //         ShippingAddresses::whereIn('id',$differenceArray)->update(['is_deleted' => 1]);
+        //     }
+        // }
         return redirect()->route('customer.index')->with('success','Customer details updated successfully');
     }
 
@@ -285,16 +279,15 @@ class CustomersController extends Controller
         $data = array();
 
         foreach ( $row_range as $row ) {
-            $customerId = trim($sheet->getCell( 'C' . $row )->getValue());
+            $customerId = trim($sheet->getCell( 'B' . $row )->getValue());
             if($customerId != ''){
                 if(!in_array($customerId, $customers)){
                     $data[] = [
                         'first_name' => $sheet->getCell( 'A' . $row )->getValue(),
-                        'last_name' => $sheet->getCell( 'B' . $row )->getValue(),
                         'custom_id' => $customerId,
-                        'email' => $sheet->getCell( 'D' . $row )->getValue(),
-                        'phone_number' => $sheet->getCell( 'E' . $row )->getValue(),
-                        'address' => $sheet->getCell( 'F' . $row )->getValue()
+                        'email' => $sheet->getCell( 'C' . $row )->getValue() ?? NULL,
+                        'phone_number' => $sheet->getCell( 'D' . $row )->getValue() ?? NULL,
+                        'address' => $sheet->getCell( 'E' . $row )->getValue() ?? NULL
                     ];
                 }else{
                     $notFound[] = $customerId;

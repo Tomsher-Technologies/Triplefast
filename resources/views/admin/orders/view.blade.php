@@ -55,7 +55,7 @@
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Order Date</span>
-                                                            <p>{{ date('d-M-Y',strtotime($order[0]->order_date)) }}</p>
+                                                            <p>{{ date('d-m-Y',strtotime($order[0]->order_date)) }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">PO Number</span>
@@ -63,7 +63,7 @@
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Need By</span>
-                                                            <p>{{ date('d-M-Y',strtotime($order[0]->need_by_date)) }}</p>
+                                                            <p>{{ date('d-m-Y',strtotime($order[0]->need_by_date)) }}</p>
                                                         </td>
                                                         
                                                     </tr>
@@ -71,7 +71,7 @@
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Ship By </span>
-                                                            <p>{{ date('d-M-Y',strtotime($order[0]->ship_by_date)) }}</p>
+                                                            <p>{{ date('d-m-Y',strtotime($order[0]->ship_by_date)) }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Sales Person </span>
@@ -146,7 +146,7 @@
                                             <td class="text-center">{{ $parts->part_details->part_number }}</td>
                                             <td>{{ $parts->description }}</td>
                                             <td>{{ $parts->rev }}</td>
-                                            <td class="text-center">{{ date('d-M-Y',strtotime($parts->need_by_date)) }}</td>
+                                            <td class="text-center">{{ date('d-m-Y',strtotime($parts->need_by_date)) }}</td>
                                         </tr>
                                         @endforeach
                                     @endif
