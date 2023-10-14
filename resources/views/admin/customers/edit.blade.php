@@ -131,7 +131,7 @@
                                     <button class="btn btn-primary btn-default btn-squared text-capitalize" type="submit">Save
                                     </button>
                                     <a href="{{ route('customer.index') }}">
-                                        <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">Cancel
+                                        <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize"  type="button">Cancel
                                         </button>
                                     </a>
                                 </div>
