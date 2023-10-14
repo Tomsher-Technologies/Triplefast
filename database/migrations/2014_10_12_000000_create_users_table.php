@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
+            $table->boolean('email_notification')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

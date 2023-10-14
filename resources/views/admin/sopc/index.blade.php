@@ -184,11 +184,11 @@
                                                 <a class="dropdown-item" href="{{ route('sopc.edit', $report->id) }}">
                                                     <span data-feather="edit"></span>  &nbsp;Edit Report
                                                 </a>
-                                                <a class="dropdown-item" href="{{ route('sopc.notification', $report->id) }}">
+                                                <!-- <a class="dropdown-item" href="{{ route('sopc.notification', $report->id) }}">
                                                     <span data-feather="bell"></span>  &nbsp;Edit Notification Settings
-                                                </a>
+                                                </a> -->
                                                 <a class="dropdown-item" href="{{ route('sopc.status', $report->id) }}">
-                                                    <span data-feather="edit"></span>  &nbsp;Edit Line Status
+                                                    <span data-feather="check-circle"></span>  &nbsp;Edit Line Status
                                                 </a>
                                             @endcan
                                            

@@ -121,20 +121,7 @@ class ReportController extends Controller
             ];
         }
 
-        $salesTeam = User::where('user_type',4)->where('is_deleted',0)->where('is_active',1)->get();
-        $notify = [];
-        foreach($salesTeam as $user){
-            $notify[] = [
-                'user_id' => $user->id,
-                'sopc_id' => $reportId,
-                'created_at' => date('Y-m-d H:i:s')
-            ];
-        }
         SopcItems::insert($items);
-        
-        if(!empty($notify)){
-            SopcUsers::insert($notify);
-        }
         SopcTimelines::create([
             'sopc_id' => $reportId, 
             'content' => 'New SOPC report created for SO Number: '.$request->so_number.' with target date <b>'.$request->target_date.'</b>' , 
@@ -372,18 +359,19 @@ class ReportController extends Controller
             $mailContent['message'] = $mailData;
 
 
-            $notify_users = SopcUsers::with(['salesUser'])->where('sopc_id',$id)->get()->toArray();
-           
+            $notify_users = User::where('user_type',4)->where('is_deleted',0)->where('is_active',1)
+                                ->get()->toArray();
+
             foreach($notify_users as $notuser){
                 foreach($notifications as $not){
                     $salesNotify[] = [
-                        'user_id' => $notuser['sales_user']['id'],
+                        'user_id' => $notuser['id'],
                         'content' => $not,
                         'created_at' => date('Y-m-d H:i:s')
                     ];
                 }
-                if(!empty($mailData)){
-                    dispatch(new SendMail($notuser['sales_user'],$mailContent));
+                if(!empty($mailData) && $notuser['email_notification'] == 1){
+                    dispatch(new SendMail($notuser,$mailContent));
                 }
             }
 
@@ -468,7 +456,7 @@ class ReportController extends Controller
 
     public function sopcStatus(string $id){
         $sopc = SopcReports::find($id);
-        $items = SopcItems::where('sopc_id',$id)->get()->toArray();
+        $items = SopcItems::with(['updatedBy'])->where('sopc_id',$id)->get()->toArray();
         return view('admin.sopc.status',compact('items','sopc')); 
     }
 
@@ -492,22 +480,27 @@ class ReportController extends Controller
                         'remark'    => $rem, 
                     ];
             }
-            SopcItems::upsert($data,['id'],['status','remark']);
+            SopcItems::upsert($data,['id'],['status','remark','updated_by']);
         }
 
         $checkItems = SopcItems::where('sopc_id',$sopc_id)->where('status',0)->count();
         
         if($checkItems == 0){
             $salesNotify = [];
-            $notify_users = SopcUsers::with(['salesUser','sopcReport'])->where('sopc_id',$sopc_id)->get()->toArray();
-            
-            foreach($notify_users as $notuser){
-                $mailContent['subject'] = 'SO Number : '.$notuser['sopc_report']['so_number'].' Lines Completed.';
-                $mailContent['message'] = ['All Lines for SO Number : '.$notuser['sopc_report']['so_number'].' is completed.'];
-                dispatch(new SendMail($notuser['sales_user'],$mailContent));
+            $sopcReport = SopcReports::find($sopc_id);
 
+            $mailContent['subject'] = 'SO Number : '.$sopcReport->so_number.' Lines Completed.';
+            $mailContent['message'] = ['All Lines for SO Number : '.$sopcReport->so_number.' is completed.'];
+
+            $notify_users = User::where('user_type',4)->where('is_deleted',0)->where('is_active',1)
+                                ->get()->toArray();
+
+            foreach($notify_users as $notuser){
+                if($notuser['email_notification'] == 1){
+                    dispatch(new SendMail($notuser,$mailContent));
+                }
                 $salesNotify[] = [
-                    'user_id' => $notuser['sales_user']['id'],
+                    'user_id' => $notuser['id'],
                     'content' => $mailContent['message'][0] ?? '',
                     'created_at' => date('Y-m-d H:i:s')
                 ];
@@ -521,85 +514,14 @@ class ReportController extends Controller
     }
 
     public function cron(){
-        $reports = SopcReports::whereNotIn('job_status',['4','5'])
-        ->where('is_deleted', 0)
-        ->where('is_active', 1)
-        ->get();
+        
+        // DB::enableQueryLog();
+        $reports = Notifications::where( 'created_at', '<', now()->subDays(60))->delete();
 
-        $not = [];
-        if($reports){
-            $notification = [];
-            foreach($reports as $pack){
-                $mach_date = $pack->machining;
-                if($mach_date != ''){
-                    $machdiff =  strtotime("$mach_date")-strtotime(date("Y-m-d"));
-                    $machdays = round($machdiff / (60 * 60 * 24));
-                    if($machdays == 1){
-                        $notification[] = "Machining date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
+        // dd(DB::getQueryLog());
+        echo '<pre>';
+        print_r(now()->subDays(60));
+        die;
 
-                $heat_date = $pack->heat_treatment;
-                if($heat_date != ''){
-                    $heatdiff =  strtotime("$heat_date")-strtotime(date("Y-m-d"));
-                    $heatdays = round($heatdiff / (60 * 60 * 24));
-                    if($heatdays == 1){
-                        $notification[] = "Heat treatment date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
-
-                $s1_date = $pack->s1_date;
-                if($s1_date != ''){
-                    $s1diff =  strtotime("$s1_date")-strtotime(date("Y-m-d"));
-                    $s1days = round($s1diff / (60 * 60 * 24));
-                    if($s1days == 1){
-                        $notification[] = "S1 date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
-
-                $subcon_date = $pack->subcon;
-                if($subcon_date != ''){
-                    $subcondiff =  strtotime("$subcon_date")-strtotime(date("Y-m-d"));
-                    $subcondays = round($subcondiff / (60 * 60 * 24));
-                    if($subcondays == 1){
-                        $notification[] = "Subcon date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
-
-                $stock_date = $pack->stock;
-                if($stock_date != ''){
-                    $stockdiff =  strtotime("$stock_date")-strtotime(date("Y-m-d"));
-                    $stockdays = round($stockdiff / (60 * 60 * 24));
-                    if($stockdays == 1){
-                        $notification[] = "Stock date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
-            }
-            if(!empty($notification)){
-                $notify = [];
-
-                $mailContent['subject'] = 'Tomorrow due dates.';
-                $mailContent['message'] = $notification;
-
-                $notify_users = User::where('user_type','3')->where('is_deleted',0)->where('is_active',1)->get()->toArray();
-
-                foreach($notify_users as $notuser){
-                    foreach($notification as $not){
-                        $notify[] = [
-                            'user_id' => $notuser['id'],
-                            'content' => $not,
-                            'created_at' => date('Y-m-d H:i:s')
-                        ];
-                    }
-                    // if(!empty($mailData)){
-                    //     dispatch(new SendMail($notuser,$mailContent));
-                    // }
-                }
-
-                if(!empty($notify)){
-                    Notifications::insert($notify);
-                }
-            }
-        }
     }
 }

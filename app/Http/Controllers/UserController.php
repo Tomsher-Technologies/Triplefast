@@ -121,6 +121,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->email_notification = ($request->has('notification')) ? 1 : 0;
         $user->save();
         $userId = $user->id;
         setPermissionsTeamId($request->user_type);
@@ -179,9 +180,6 @@ class UserController extends Controller
         setPermissionsTeamId($user->user_type);
         $userRole = $user->roles->pluck('id')->all();
        
-        // echo '<pre>';
-        // print_r($roles);
-        // die;
         $user_types = UserTypes::where('is_active',1)->orderBy('type', 'ASC')->get();
         return view('admin.users.edit',compact('user','roles','userRole','user_types'));
     }
@@ -223,6 +221,7 @@ class UserController extends Controller
         $user->user_type = $request->user_type;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->email_notification = ($request->has('notification')) ? 1 : 0;
         if($request->password != ''){
             $user->password = Hash::make($request->password);
         }

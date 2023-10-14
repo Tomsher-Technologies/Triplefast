@@ -178,9 +178,11 @@
                             <table class="table table-bordered">
                                 <tbody class="f-14">
                                     <tr>
-                                        <th class="text-center w-20">Line</th>
-                                        <th class="text-center w-30">Status</th>
-                                        <th>Remarks</th>
+                                        <th class="text-center">Line</th>
+                                        <th class="text-center">Status</th>
+                                        <th class=" w-30">Remarks</th>
+                                        <th class="text-center ">Updated By</th>
+                                        <th class="text-center ">Updated Date</th>
                                     </tr>
                                     @if($sopc->sopcItems)
                                         @foreach($sopc->sopcItems as $key => $item)
@@ -194,6 +196,8 @@
                                                 @endif
                                             </td>
                                             <td>{{ $item->remark }}</td>
+                                            <td class="text-center">{{ $item->updatedBy->name ?? '' }}</td>
+                                            <td class="text-center">{{ ($item->updated_at != NULL) ? date('d-m-Y', strtotime($item->updated_at)) : '' }}</td>
                                         </tr>
                                         @endforeach
                                     @endif
