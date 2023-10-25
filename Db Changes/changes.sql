@@ -1,0 +1,1 @@
+ALTER TABLE `sopc_items` ADD `is_cancelled` TINYINT(1) NOT NULL DEFAULT '0' AFTER `remark`;

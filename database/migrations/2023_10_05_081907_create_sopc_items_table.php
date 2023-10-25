@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('line_no');
             $table->boolean('status')->default(0);
             $table->text('remark')->nullable();
+            $table->boolean('is_cancelled')->default(0);
             $table->bigInteger('updated_by')->unsigned()->nullable();;
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

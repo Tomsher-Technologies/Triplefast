@@ -23,12 +23,15 @@ class HomeController extends Controller
         if(Auth::check()){
             $customers = Customers::where('is_deleted',0)->count();
             
+            $total = SopcReports::where('is_deleted',0)->count();
+            $not_started = SopcReports::where('job_status',0)->where('is_deleted',0)->count();
+            $started = SopcReports::where('job_status',1)->where('is_deleted',0)->count();
             $partial = SopcReports::where('job_status',2)->where('is_deleted',0)->count();
             $hold = SopcReports::where('job_status',3)->where('is_deleted',0)->count();
             $completed = SopcReports::where('job_status',4)->where('is_deleted',0)->count();
             $cancelled = SopcReports::where('job_status',5)->where('is_deleted',0)->count();
 
-            return view('admin.dashboard', compact('customers','partial','hold','completed','cancelled'));
+            return view('admin.dashboard', compact('customers','partial','hold','completed','cancelled','started','total','not_started'));
         }
   
         return redirect("login")->withSuccess('You are not allowed to access');

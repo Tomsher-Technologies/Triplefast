@@ -55,7 +55,7 @@
                                                     <label for="name1">Customer<span class="required">*</span></label>
                                                     <select class="form-control" id="customer_id" name="customer_id">
                                                         <option value="">Select Customer</option> 
-                                                        <option value="{{ $order->customer_id }}" selected>{{ $order->customer->first_name ?? '' }} {{ $order->customer->last_name ?? '' }}</option>
+                                                        <option value="{{ $order->customer_id }}" selected>{{ $order->customer->first_name ?? '' }}</option>
                                                     </select>
                                                 </div>
 
@@ -213,7 +213,7 @@
     let orderDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 minDate:  new Date('{{$order->order_date}}')
@@ -333,7 +333,7 @@
                     return {
                         results:  $.map(data, function (item) {
                             return {
-                                text: item.first_name+ ' '+ item.last_name +' - '+item.custom_id,
+                                text: item.first_name+ ' - '+item.custom_id,
                                 id: item.id
                             }
                         })
@@ -404,7 +404,7 @@
         $("#line_need_by_date"+count).rules('add', { required: true });
 
         $(".dynamic_date").removeClass('hasDatepicker').datepicker({
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 minDate:  new Date('{{$order->order_date}}')

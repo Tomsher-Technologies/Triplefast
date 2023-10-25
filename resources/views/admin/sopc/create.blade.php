@@ -48,38 +48,46 @@
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Enter Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control" id="enter_date" name="enter_date" placeholder="DD-MM-YYYY" value="{{ old('enter_date') }}">
+                                                    <label for="name1">Report Type</label>
+                                                    <select class="form-control" id="report_type" name="report_type">
+                                                        <option {{ (old('report_type') == 'normal') ? 'selected' : '' }}  value="normal" >Normal</option>
+                                                        <option {{ (old('report_type') == "hot") ? 'selected' : '' }} value="hot">Hot Jobs</option>
+                                                        <option {{ (old('report_type') == 'oem') ? 'selected' : '' }}  value="oem">OEM</option>
+                                                        <option {{ (old('report_type') == 'tpi') ? 'selected' : '' }}  value="tpi">TPI</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Enter Date</label>
+                                                    <input type="text" class="form-control" id="enter_date" name="enter_date" placeholder="DD-MM-YYYY" value="{{ old('enter_date') }}" readonly>
                                                     <x-input-error name='enter_date'/>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Issue Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control" id="issue_date" name="issue_date" placeholder="DD-MM-YYYY" value="{{ old('issue_date') }}">
+                                                    <label for="name1">Issue Date</label>
+                                                    <input type="text" class="form-control" id="issue_date" name="issue_date" placeholder="DD-MM-YYYY" value="{{ old('issue_date') }}" readonly>
                                                     <x-input-error name='issue_date'/>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Started Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="started_date" name="started_date" placeholder="DD-MM-YYYY" value="{{ old('started_date') }}">
-                                                    <x-input-error name='started_date'/>
+                                                    <label for="name1">Started Date</label>
+                                                    <input type="text" class="form-control date-picker" id="started_date" name="started_date" placeholder="DD-MM-YYYY" value="{{ old('started_date') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Due Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="due_date" name="due_date" placeholder="DD-MM-YYYY" value="{{ old('due_date') }}">
+                                                    <label for="name1">Due Date</label>
+                                                    <input type="text" class="form-control date-picker" id="due_date" name="due_date" placeholder="DD-MM-YYYY" value="{{ old('due_date') }}" readonly>
                                                     <x-input-error name='due_date'/>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Target Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="target_date" name="target_date" placeholder="DD-MM-YYYY" value="{{ old('target_date') }}">
-                                                    <x-input-error name='target_date'/>
+                                                    <label for="name1">Target Date</label>
+                                                    <input type="text" class="form-control date-picker" id="target_date" name="target_date" placeholder="DD-MM-YYYY" value="{{ old('target_date') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Completed Date</label>
-                                                    <input type="text" class="form-control date-picker" id="completed_date" name="completed_date" placeholder="DD-MM-YYYY" value="{{ old('completed_date') }}">
+                                                    <input type="text" class="form-control date-picker" id="completed_date" name="completed_date" placeholder="DD-MM-YYYY" value="{{ old('completed_date') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
@@ -128,34 +136,80 @@
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Machining</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Heat Treatment</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment') }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment') }}" readonly>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">S1</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date') }}">
+                                                    <input type="text" class="form-control" id="s1_date" name="s1_date" placeholder="Enter S1" value="{{ old('s1_date') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Subcon</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon') }}">
+                                                    <input type="text" class="form-control" id="subcon" name="subcon" placeholder="Enter Subcon" value="{{ old('subcon') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Stock</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="stock" name="stock" placeholder="DD-MM-YYYY" value="{{ old('stock') }}">
+                                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="Enter Stock" value="{{ old('stock') }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Total Value </label>
-                                                    <input type="text" class="form-control" id="total_value" name="total_value" placeholder="Enter total value" value="{{ old('total_value') }}">
+                                                    <input type="number"  step="0.01" class="form-control" id="total_value" name="total_value" placeholder="Enter total value" value="{{ old('total_value') }}">
                                                 </div>
 
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Fasteners </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="fasteners" name="fasteners" placeholder="Enter Fasteners" value="{{ old('fasteners') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Gasket </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="gasket" name="gasket" placeholder="Enter Gasket" value="{{ old('gasket') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">PTFE </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="ptfe" name="ptfe" placeholder="Enter PTFE" value="{{ old('ptfe') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">S1F </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="s1f" name="s1f" placeholder="Enter S1F" value="{{ old('s1f') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">S1G </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="s1g" name="s1g" placeholder="Enter S1G" value="{{ old('s1g') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">FIM-PTFE </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="fim_ptfe" name="fim_ptfe" placeholder="Enter FIM-PTFE" value="{{ old('fim_ptfe') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">FIM-ZY </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="fim_zy" name="fim_zy" placeholder="Enter FIM-ZY" value="{{ old('fim_zy') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Charges </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="charges" name="charges" placeholder="Enter Charges" value="{{ old('charges') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Hold </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="hold" name="hold" placeholder="Enter Hold" value="{{ old('hold') }}">
+                                                </div>
+
+                                                
                                                 <!-- form group 1 -->
                                                 
                                             <!-- End: form -->
@@ -196,8 +250,12 @@
     .add-product__body {
         padding: 10px 28px;
     }
-    input:read-only {
+    .readonly {
         pointer-events : none !important;
+        background-color: #f4f5f7 !important;
+    }
+    input:read-only {
+        background-color:#fff !important;
     }
 </style>
 @endsection
@@ -208,27 +266,26 @@
     let issueDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
+                                constrainInput: true
                             };
         $("#issue_date,.date-picker").datepicker(datePickerOptions);
         $("#enter_date").datepicker( {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
-                                maxDate: new Date()
+                                maxDate: new Date(),
+                                constrainInput: true
                             });
 
-        $(document).on('change', '#issue_date', function(){
-            issueDate = $('#issue_date').val();
-            $(".date-picker").datepicker( "option", "minDate", new Date(issueDate) );
-        });
 
         var permissionCheck = $('#permission').val();
         
         if(permissionCheck != 1){
-            $(".date-permission").datepicker().attr('readonly','readonly');    
+            $('#s1_date,#subcon,#stock').addClass('readonly');   
+            $(".date-permission").addClass('readonly');    
         }
 
         $('#customer_id').select2({
@@ -243,7 +300,7 @@
                     return {
                         results:  $.map(data, function (item) {
                             return {
-                                text: item.first_name+ ' '+ item.last_name +' - '+item.custom_id,
+                                text: item.first_name+ ' - '+item.custom_id,
                                 id: item.id
                             }
                         })

@@ -27,8 +27,7 @@
                     <div class="user-content-info">
                         <p class="user-content-info__item">
                             <label class="il-gray fs-14 fw-400 align-center"> Name : </label>
-                            <label class="il-gray fs-16 fw-500 align-center ml-3"> {{ $customer[0]->first_name ?? '' }}
-                                {{ $customer[0]->last_name ?? '' }} </label>
+                            <label class="il-gray fs-16 fw-500 align-center ml-3"> {{ $customer[0]->first_name ?? '' }}</label>
                         </p>
                         <p class="user-content-info__item">
                             <label class="il-gray fs-14 fw-400 align-center"> Email : </label>

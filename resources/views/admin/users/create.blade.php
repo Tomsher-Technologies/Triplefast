@@ -131,16 +131,16 @@
 
 @section('footer')
 <script type="text/javascript">
-    $('#emailNotification').css('display','none');
+    // $('#emailNotification').css('display','none');
 
     $('#user_type').on('change', function() {
         var userType = $(this).val();
 
-        if(userType == 4){
-            $('#emailNotification').css('display','block');
-        }else{
-            $('#emailNotification').css('display','none');
-        }
+        // if(userType == 4){
+        //     $('#emailNotification').css('display','block');
+        // }else{
+        //     $('#emailNotification').css('display','none');
+        // }
         
         $.ajax({
             url: "{{ route('ajax-roles') }}",

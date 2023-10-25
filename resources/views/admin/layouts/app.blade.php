@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor_assets/css/footable.standalone.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor_assets/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor_assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor_assets/css/daterangepicker.css') }}">
     <!-- endinject -->
 
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">

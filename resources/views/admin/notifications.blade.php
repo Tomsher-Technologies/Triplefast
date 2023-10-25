@@ -117,7 +117,7 @@
     
 
     $("#date_search").datepicker({
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 maxDate: '{{ date("d-m-Y") }}'

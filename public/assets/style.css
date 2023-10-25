@@ -10266,8 +10266,13 @@ table.table-basic tr td.card .card-body,
 
 .userDatatable-title {
   font-size: 14px;
-  font-weight: 500;
+  /* font-weight: 500; */
+  font-weight: 600;
   text-transform: capitalize;
+  color: black !important;
+}
+.userDatatable-title>a {
+  color: black !important;
 }
 
 .projectDatatable-title {

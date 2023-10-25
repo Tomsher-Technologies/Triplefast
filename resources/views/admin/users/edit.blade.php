@@ -140,20 +140,20 @@
 <script type="text/javascript">
 
     var usertype = '{{ $user->user_type }}';
-    if(usertype == 4){
-        $('#emailNotification').css('display','block');
-    }else{
-        $('#emailNotification').css('display','none');
-    }
+    // if(usertype == 4){
+    //     $('#emailNotification').css('display','block');
+    // }else{
+    //     $('#emailNotification').css('display','none');
+    // }
     
     $('#user_type').on('change', function() {
         var userType = $(this).val();
 
-        if(userType == 4){
-            $('#emailNotification').css('display','block');
-        }else{
-            $('#emailNotification').css('display','none');
-        }
+        // if(userType == 4){
+        //     $('#emailNotification').css('display','block');
+        // }else{
+        //     $('#emailNotification').css('display','none');
+        // }
 
         $.ajax({
             url: "{{ route('ajax-roles') }}",
