@@ -9,6 +9,7 @@ use App\Models\SopcTimelines;
 use App\Models\SopcUsers;
 use App\Models\User;
 use App\Models\Notifications;
+use App\Models\Customers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendMail;
@@ -32,15 +33,29 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-        $search_so_number =  $status_search = '';
+        $search_so_number =  $status_search = $type_search = $dates_search = $customer_id = '';
+        $customer = [];
+
         if ($request->has('so_number')) {
             $search_so_number = $request->so_number;
         }
         if ($request->has('status')) {
             $status_search = $request->status;
         }
+
+        if ($request->has('date_type')) {
+            $type_search = $request->date_type;
+        }
+
+        if ($request->has('dates')) {
+            $dates_search = $request->dates;
+        }
+
+        if ($request->has('customer_id')) {
+            $customer_id = $request->customer_id;
+        }
        
-        $query = SopcReports::with(['createdBy'])->where('is_deleted',0);
+        $query = SopcReports::with(['customer','createdBy'])->where('is_deleted',0);
 
         if($search_so_number){
             $query->where('so_number', 'LIKE', "%$search_so_number%");
@@ -49,10 +64,34 @@ class ReportController extends Controller
         if($status_search != ''){
             $query->where('job_status', $status_search);
         }
+        if($customer_id != ''){
+            $query->where('customer_id', $customer_id);
+            $customer = Customers::find($customer_id);
+        }
+        if($type_search != '' && $dates_search != ''){
+            $date = explode(' - ', $dates_search);
+            $start_date = str_replace('/', '-', trim($date[0])) ?? '';
+            $end_date = str_replace('/', '-', trim($date[1])) ?? '';
 
-        $data = $query->orderBy('id','DESC')->paginate(15);
-       
-        return view('admin.sopc.index',compact('data','search_so_number','status_search'));
+            $start_date = date('Y-m-d', strtotime($start_date));
+            $end_date = date('Y-m-d', strtotime($end_date));
+
+            if($type_search == 'issue'){
+                $query->whereBetween('issue_date', [$start_date, $end_date]);
+            }
+            if($type_search == 'start'){
+                $query->whereBetween('started_date', [$start_date, $end_date]);
+            }
+            if($type_search == 'target'){
+                $query->whereBetween('target_date', [$start_date, $end_date]);
+            }
+            if($type_search == 'completed'){
+                $query->whereBetween('completed_date', [$start_date, $end_date]);
+            }
+        }
+        $data = $query->sortable(['id' => 'desc'])->paginate(10);
+
+        return view('admin.sopc.index',compact('data','search_so_number','status_search','type_search','dates_search','customer'));
     }
 
     /**
@@ -70,11 +109,9 @@ class ReportController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'so_number'     => 'required|unique:sopc_reports,so_number',
-            'enter_date'    => 'required',
-            'issue_date'    => 'required',
-            'started_date'  => 'required',
-            'due_date'      => 'required',
-            'target_date'   => 'required',
+            // 'enter_date'    => 'required',
+            // 'issue_date'    => 'required',
+            // 'due_date'      => 'required',
             'total_items'   => 'required',
             'customer_id'   => 'required',
             'po_number'     => 'required',
@@ -89,6 +126,7 @@ class ReportController extends Controller
 
         $sopc = new SopcReports;
         $sopc->so_number        = $request->so_number;
+        $sopc->report_type      = $request->report_type;
         $sopc->enter_date       = ($request->enter_date != '') ? date('Y-m-d', strtotime($request->enter_date)) : NULL;
         $sopc->issue_date       = ($request->issue_date != '') ? date('Y-m-d', strtotime($request->issue_date)) : NULL;
         $sopc->started_date     = ($request->started_date != '') ? date('Y-m-d', strtotime($request->started_date)) : NULL;
@@ -103,10 +141,19 @@ class ReportController extends Controller
         $sopc->job_status       = $request->job_status;
         $sopc->machining        = ($request->machining != '') ? date('Y-m-d', strtotime($request->machining)) : NULL;
         $sopc->heat_treatment   = ($request->heat_treatment != '') ? date('Y-m-d', strtotime($request->heat_treatment)) : NULL;
-        $sopc->s1_date          = ($request->s1_date != '') ? date('Y-m-d', strtotime($request->s1_date)) : NULL;
-        $sopc->subcon           = ($request->subcon != '') ? date('Y-m-d', strtotime($request->subcon)) : NULL;
-        $sopc->stock            = ($request->stock != '') ? date('Y-m-d', strtotime($request->stock)) : NULL;
+        $sopc->s1_date          = $request->s1_date;
+        $sopc->subcon           = $request->subcon;
+        $sopc->stock            = $request->stock;
         $sopc->total_value      = $request->total_value;
+        $sopc->fasteners        = $request->fasteners ?? NULL;
+        $sopc->gasket           = $request->gasket ?? NULL;
+        $sopc->ptfe             = $request->ptfe ?? NULL;
+        $sopc->s1f              = $request->s1f ?? NULL;
+        $sopc->s1g              = $request->s1g ?? NULL;
+        $sopc->fim_ptfe         = $request->fim_ptfe ?? NULL;
+        $sopc->fim_zy           = $request->fim_zy ?? NULL;
+        $sopc->charges          = $request->charges ?? NULL;
+        $sopc->hold             = $request->hold ?? NULL;
         $sopc->created_by       = Auth::user()->id;
         $sopc->save();
 
@@ -122,9 +169,13 @@ class ReportController extends Controller
         }
 
         SopcItems::insert($items);
+        $content = 'New SOPC report created for SO Number: <b>'.$request->so_number.'</b>';
+        if($request->target_date != NULL){
+            $content .= ' with target date <b>'.$request->target_date.'</b>'; 
+        }
         SopcTimelines::create([
             'sopc_id' => $reportId, 
-            'content' => 'New SOPC report created for SO Number: '.$request->so_number.' with target date <b>'.$request->target_date.'</b>' , 
+            'content' =>  $content, 
             'updated_by' => Auth::user()->id,
             'created_at' => date('Y-m-d H:i:s')
         ]);
@@ -156,6 +207,17 @@ class ReportController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validator = Validator::make($request->all(), [
+            'so_number'     => 'required|unique:sopc_reports,so_number,'.$id,
+            'total_items'   => 'required',
+            'customer_id'   => 'required',
+            'po_number'     => 'required',
+            'job_status'    => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
         $sopc = SopcReports::find($id);
 
         $old_target         = $sopc->target_date;
@@ -163,27 +225,27 @@ class ReportController extends Controller
         $old_job_status     = $sopc->job_status;
         $old_machining_date = $sopc->machining;
         $old_heat_date      = $sopc->heat_treatment;
-        $old_s1_date        = $sopc->s1_date;
-        $old_subcon         = $sopc->subcon;
-        $old_stock          = $sopc->stock;
+        $old_s1_date        = trim($sopc->s1_date);
+        $old_subcon         = trim($sopc->subcon);
+        $old_stock          = trim($sopc->stock);
         $so_num             = $sopc->so_number;
 
         $target_date    = $request->target_date;
         $completed_date = $request->completed_date;
         $machining      = $request->machining;
         $heat_treatment = $request->heat_treatment;
-        $s1_date        = $request->s1_date;
-        $subcon         = $request->subcon;
-        $stock          = $request->stock;
+        $s1_date        = trim($request->s1_date);
+        $subcon         = trim($request->subcon);
+        $stock          = trim($request->stock);
 
         $new_target         = ($target_date != '') ? date('Y-m-d', strtotime($target_date)) : NULL;
         $new_completed_date = ($completed_date != '') ? date('Y-m-d', strtotime($completed_date)) : NULL;
         $new_job_status     = $request->job_status;
         $new_machining_date = ($machining != '') ? date('Y-m-d', strtotime($machining)) : NULL;
         $new_heat_date      = ($heat_treatment != '') ? date('Y-m-d', strtotime($heat_treatment)) : NULL;
-        $new_s1_date        = ($s1_date != '') ? date('Y-m-d', strtotime($s1_date)) : NULL;
-        $new_subcon         = ($subcon != '') ? date('Y-m-d', strtotime($subcon)) : NULL;
-        $new_stock          = ($stock != '') ? date('Y-m-d', strtotime($stock)) : NULL;
+        $new_s1_date        = ($s1_date != '') ? $s1_date : NULL;
+        $new_subcon         = ($subcon != '') ? $subcon : NULL;
+        $new_stock          = ($stock != '') ? $stock : NULL;
 
         $jobStatus = ['Not Started','Started','Partial','Hold','Completed','Cancelled'];
         $created_at = date('Y-m-d H:i:s');
@@ -249,7 +311,7 @@ class ReportController extends Controller
         }
 
         if($old_machining_date != $new_machining_date){
-            if($new_machining_date == ''){
+            if($new_machining_date == '' && $old_machining_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
                     'content' => 'Machining date removed.' , 
@@ -257,7 +319,7 @@ class ReportController extends Controller
                     'created_at' => $created_at
                 ];
                 $notifications[] = 'Machining date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }else{
+            }elseif($new_machining_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
                     'content' => 'Machining date changed to <b>'.$machining.'</b>' , 
@@ -269,7 +331,7 @@ class ReportController extends Controller
         }
 
         if($old_heat_date != $new_heat_date){
-            if($new_heat_date == ''){
+            if($new_heat_date == '' && $old_heat_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
                     'content' => 'Heat Treatment date removed.' , 
@@ -277,7 +339,7 @@ class ReportController extends Controller
                     'created_at' => $created_at
                 ];
                 $notifications[] = 'Heat Treatment date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }else{
+            }elseif($new_heat_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
                     'content' => 'Heat Treatment date changed to <b>'.$heat_treatment.'</b>' , 
@@ -288,63 +350,63 @@ class ReportController extends Controller
             }
         }
 
-        if($old_s1_date != $new_s1_date){
-            if($new_s1_date == ''){
+        if($old_s1_date !== $new_s1_date){
+            if($new_s1_date == '' && $old_s1_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
-                    'content' => 'S1 date removed.' , 
+                    'content' => 'S1 data removed.' , 
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'S1 date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }else{
+                $notifications[] = 'S1 data for SO Number: <b>'.$so_num.'</b> is removed.' ;
+            }elseif($new_s1_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
-                    'content' => 'S1 date changed to <b>'.$s1_date.'</b>' , 
+                    'content' => 'S1 data changed to <b>'.$s1_date.'</b>' , 
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'S1 date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$s1_date.'</b>';
+                $notifications[] = 'S1 data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$s1_date.'</b>';
             } 
         }
 
-        if($old_subcon != $new_subcon){
-            if($new_subcon == ''){
+        if($old_subcon !== $new_subcon){
+            if($new_subcon == '' && $old_subcon != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
-                    'content' => 'Subcon date removed.' , 
+                    'content' => 'Subcon data removed.' , 
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Subcon date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }else{
+                $notifications[] = 'Subcon data for SO Number: <b>'.$so_num.'</b> is removed.' ;
+            }elseif($new_subcon != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
-                    'content' => 'Subcon date changed to <b>'.$subcon.'</b>' , 
+                    'content' => 'Subcon data changed to <b>'.$subcon.'</b>' , 
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Subcon date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subcon.'</b>';
+                $notifications[] = 'Subcon data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subcon.'</b>';
             }
         }
 
-        if($old_stock != $new_stock){
-            if($new_stock == ''){
+        if($old_stock !== $new_stock){
+            if($new_stock == '' && $old_stock != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
-                    'content' => 'Stock date removed.' , 
+                    'content' => 'Stock data removed.' , 
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Stock date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }else{
+                $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is removed.' ;
+            }elseif($new_stock != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
-                    'content' => 'Stock date changed to <b>'.$stock.'</b>' , 
+                    'content' => 'Stock data changed to <b>'.$stock.'</b>' , 
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Stock date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$stock.'</b>';
+                $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$stock.'</b>';
             }
         }
 
@@ -380,11 +442,13 @@ class ReportController extends Controller
             }
         }
         
+        $sopc->enter_date       = ($request->enter_date != '') ? date('Y-m-d', strtotime($request->enter_date)) : NULL;
+        $sopc->issue_date       = ($request->issue_date != '') ? date('Y-m-d', strtotime($request->issue_date)) : NULL;
         $sopc->started_date     = ($request->started_date != '') ? date('Y-m-d', strtotime($request->started_date)) : NULL;
         $sopc->due_date         = ($request->due_date != '') ? date('Y-m-d', strtotime($request->due_date)) : NULL;
         $sopc->target_date      = $new_target;
         $sopc->completed_date   = $new_completed_date;
-
+        $sopc->report_type      = $request->report_type;
         $sopc->division         = $request->division;
         $sopc->customer_id      = $request->customer_id;
         $sopc->po_number        = $request->po_number;
@@ -396,6 +460,15 @@ class ReportController extends Controller
         $sopc->subcon           = $new_subcon;
         $sopc->stock            = $new_stock;
         $sopc->total_value      = $request->total_value;
+        $sopc->fasteners        = $request->fasteners ?? NULL;
+        $sopc->gasket           = $request->gasket ?? NULL;
+        $sopc->ptfe             = $request->ptfe ?? NULL;
+        $sopc->s1f              = $request->s1f ?? NULL;
+        $sopc->s1g              = $request->s1g ?? NULL;
+        $sopc->fim_ptfe         = $request->fim_ptfe ?? NULL;
+        $sopc->fim_zy           = $request->fim_zy ?? NULL;
+        $sopc->charges          = $request->charges ?? NULL;
+        $sopc->hold             = $request->hold ?? NULL;
         $sopc->updated_by       = Auth::user()->id;
         $sopc->save();
 
@@ -456,7 +529,7 @@ class ReportController extends Controller
 
     public function sopcStatus(string $id){
         $sopc = SopcReports::find($id);
-        $items = SopcItems::with(['updatedBy'])->where('sopc_id',$id)->get()->toArray();
+        $items = SopcItems::with(['updatedUser'])->where('sopc_id',$id)->get()->toArray();
         return view('admin.sopc.status',compact('items','sopc')); 
     }
 
@@ -464,6 +537,9 @@ class ReportController extends Controller
         $remarks = $request->remark;
         $sopc_id = $request->sopc_id;
         $status = ($request->has('status')) ? $request->status : [];
+
+        $updatedUser = $request->user;
+        $updatedDate = $request->date;
      
         if(!empty($remarks)){
             $data = [];
@@ -471,26 +547,36 @@ class ReportController extends Controller
                 $item_id    = explode('-',$key);
                 $id         = $item_id[0];
                 $line_no    = $item_id[1];
+                $updUser = ($updatedUser[$key] != NULL) ? $updatedUser[$key] : Auth::user()->id;
+                $updDate = ($updatedUser[$key] != NULL) ? date('Y-m-d H:i:s', strtotime($updatedDate[$key])) : date('Y-m-d H:i:s');
                 $data[] = [
                         'id'        => $id,
                         'sopc_id'   => $sopc_id,
                         'line_no'   => $line_no,
                         'status'    => array_key_exists($key, $status) ? 1 : 0,
-                        'updated_by' => Auth::user()->id,
+                        'updated_by' => (array_key_exists($key, $status) || $rem != '') ? $updUser : NULL,
+                        'updated_at' => (array_key_exists($key, $status) || $rem != '') ? $updDate : NULL,
                         'remark'    => $rem, 
                     ];
             }
             SopcItems::upsert($data,['id'],['status','remark','updated_by']);
         }
 
-        $checkItems = SopcItems::where('sopc_id',$sopc_id)->where('status',0)->count();
+        $checkItems = SopcItems::where('sopc_id',$sopc_id)->where('status',0)->where('is_cancelled',0)->count();
         
         if($checkItems == 0){
             $salesNotify = [];
             $sopcReport = SopcReports::find($sopc_id);
 
             $mailContent['subject'] = 'SO Number : '.$sopcReport->so_number.' Lines Completed.';
-            $mailContent['message'] = ['All Lines for SO Number : '.$sopcReport->so_number.' is completed.'];
+            $mailContent['message'] = ['All Lines for SO Number : <b>'.$sopcReport->so_number.'</b> is completed.'];
+
+            SopcTimelines::create([
+                'sopc_id' => $sopc_id, 
+                'content' =>  $mailContent['message'][0], 
+                'updated_by' => Auth::user()->id,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
 
             $notify_users = User::where('user_type',4)->where('is_deleted',0)->where('is_active',1)
                                 ->get()->toArray();
@@ -510,18 +596,125 @@ class ReportController extends Controller
             }
         }
 
-        return redirect()->route('sopc.index')->with(['success' => "Status updated succesfully"]);
+        return redirect()->back()->with(['success' => "Status updated succesfully"]);
     }
 
     public function cron(){
         
         // DB::enableQueryLog();
-        $reports = Notifications::where( 'created_at', '<', now()->subDays(60))->delete();
+        $reports = SopcReports::whereNotIn('job_status',['4','5'])
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->get();
 
+        $not = [];
+        if($reports){
+            $notification = [];
+            foreach($reports as $pack){
+                $mach_date = $pack->machining;
+                if($mach_date != ''){
+                    $machdiff =  strtotime($mach_date)-strtotime(date("Y-m-d"));
+                    $machdays = round($machdiff / (60 * 60 * 24));
+                    if($machdays == 1){
+                        $notification[] = "Machining date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                    }
+                }
+
+                $heat_date = $pack->heat_treatment;
+                if($heat_date != ''){
+                    $heatdiff =  strtotime($heat_date)-strtotime(date("Y-m-d"));
+                    $heatdays = round($heatdiff / (60 * 60 * 24));
+                    if($heatdays == 1){
+                        $notification[] = "Heat treatment date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                    }
+                }
+
+                echo '<br><br>target_date == '. $target_date = $pack->target_date;
+                if($target_date != ''){
+                    $targetdiff =  strtotime($target_date)-strtotime(date("Y-m-d"));
+                    $targetdays = round($targetdiff / (60 * 60 * 24));
+                    if($targetdays == 1){
+                    $notification[] = "Target date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                    }
+                }
+            }
+            if(!empty($notification)){
+                echo '<pre>';
+                print_r($notification);
+                die;
+                $notify = [];
+
+                $mailContent['subject'] = "Tomorrow's due dates";
+                $mailContent['message'] = $notification;
+
+                $notify_users = User::where('user_type','3')->where('is_deleted',0)->where('is_active',1)->get()->toArray();
+
+                foreach($notify_users as $notuser){
+                    foreach($notification as $not){
+                        $notify[] = [
+                            'user_id' => $notuser['id'],
+                            'content' => $not,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ];
+                    }
+                    // dispatch(new SendMail($notuser,$mailContent));
+                }
+
+                if(!empty($notify)){
+                    // Notifications::insert($notify);
+                }
+            }
+        }
         // dd(DB::getQueryLog());
-        echo '<pre>';
-        print_r(now()->subDays(60));
-        die;
+     
+    }
 
+    public function cancelLine(Request $request){
+        $lineId = $request->id;
+        $userId = Auth::user() ? Auth::user()->id : '';
+        $sopc_id = $request->sopc_id;
+        $line_no = $request->line_no;
+
+        if($lineId != '' && $sopc_id != ''){
+            $updateItem = SopcItems::where('id',$lineId)->update(['is_cancelled'=>1, 'updated_by'=>$userId, 'updated_at'=>date("Y-m-d h:i:s")]); 
+            $report = SopcReports::find($sopc_id);
+            $oldQty = $report->total_items;
+            $so_number = $report->so_number;
+            $report->total_items = $oldQty - 1;
+            $report->save();
+
+            SopcTimelines::create([
+                'sopc_id' => $sopc_id, 
+                'content' =>  'Line Number : <b>'.$line_no.'</b> for SO Number : <b>'.$so_number.'</b> is cancelled', 
+                'updated_by' => Auth::user()->id,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+    }
+
+    public function addNewLine(Request $request){
+        $count = $request->count;
+        $sopc_id = $request->sopc_id;
+
+        if($count != 0){
+            $lastItem = SopcItems::where('sopc_id', $sopc_id)->orderBy('id','desc')->limit(1)->pluck('line_no')->toArray();
+            $lastLineNumber = $lastItem[0] ?? 0;
+            
+            $items = [];
+            for($i = 1; $i <= $count; $i++){
+                $items[] = [
+                    'line_no' => $lastLineNumber + 1,
+                    'sopc_id' => $sopc_id,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                $lastLineNumber++;
+            }
+            SopcItems::insert($items);
+
+            $report = SopcReports::find($sopc_id);
+            $oldQty = $report->total_items;
+            $report->total_items = $oldQty + $count;
+            $report->save();
+        }
     }
 }

@@ -57,6 +57,7 @@
                                     <option value="0" @if($status_search == '0') selected @endif>Inactive</option>
                                 </select>
                             </div>
+                            
                             <div class="form-group atbd-select d-flex align-items-center adv-table-searchs__position my-md-25 my-15 mr-sm-20 mr-0 ">
                                 <label class="d-flex align-items-center mb-sm-0 mb-2">Team</label>
                                 <select class="form-control ml-sm-10 ml-0" id="team" name="team">
@@ -96,9 +97,14 @@
                                     <span class="userDatatable-title">Email</span>
                                 </th>
                                
-                                <th>
+                                <th class="text-center">
+                                    <span class="userDatatable-title">Email Notification</span>
+                                </th>
+
+                                <th class="text-center">
                                     <span class="userDatatable-title">Status</span>
                                 </th>
+                                
                                 <th class="text-center">
                                     <span class="userDatatable-title">Action</span>
                                 </th>
@@ -142,9 +148,18 @@
                                         {{ $user->email }}
                                     </div>
                                 </td>
-                                
 
-                                <td>
+                                <td class="text-center">
+                                    <div class="userDatatable-content">
+                                        @if($user->email_notification == 1)
+                                        <span class="badge badge-round badge-success badge-lg">ON</span>
+                                        @else
+                                        <span class="badge badge-round badge-danger badge-lg">OFF</span>
+                                        @endif
+                                    </div>
+                                </td>
+
+                                <td class="text-center">
                                     <div class="userDatatable-content">
                                         @if($user->is_active == 1)
                                         <span class="badge badge-round badge-success badge-lg">Active</span>

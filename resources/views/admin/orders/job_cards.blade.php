@@ -497,7 +497,7 @@
 <script type="text/javascript">
     
         var datePickerOptions = {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 minDate: '{{ date("d-m-Y", strtotime($order[0]->order_date)) }}'
@@ -676,7 +676,7 @@
                 success: function (response) {
                     var res = JSON.parse(response);
                     res = res[0];
-                    var customerName = res.order.customer.first_name+' '+res.order.customer.last_name;
+                    var customerName = res.order.customer.first_name;
                     $('#job_number_view').html(res.job_number);
                     $('#customer_view').html(customerName);
                     $('#customer_order_number_view').html(res.order.po_number);
@@ -730,7 +730,7 @@
                 success: function (response) {
                     var res = JSON.parse(response);
                     res = res[0];
-                    var customerName = res.order.customer.first_name+' '+res.order.customer.last_name;
+                    var customerName = res.order.customer.first_name;
                    
                     $('#job_number').val(res.job_number);
                     

@@ -44,60 +44,68 @@
                                                 <input type="hidden" name="permission" id="permission" value="{{ auth()->user()->can('sopc-edit-dates') }}">
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">SO Number<span class="required">*</span></label>
-                                                    <input type="text" class="form-control" id="so_number" name="so_number" placeholder="Enter SO Number" value="{{ old('so_number', $sopc->so_number) }}" readonly>
+                                                    <input type="text" class="form-control" id="so_number" name="so_number" placeholder="Enter SO Number" value="{{ old('so_number', $sopc->so_number) }}" >
                                                     <x-input-error name='so_number'/>
                                                 </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Report Type</label>
+                                                    <select class="form-control" id="report_type" name="report_type">
+                                                        <option {{ (old('report_type', $sopc->report_type) == 'normal') ? 'selected' : '' }}  value="normal" >Normal</option>
+                                                        <option {{ (old('report_type', $sopc->report_type) == "hot") ? 'selected' : '' }} value="hot">Hot Jobs</option>
+                                                        <option {{ (old('report_type', $sopc->report_type) == 'oem') ? 'selected' : '' }}  value="oem">OEM</option>
+                                                        <option {{ (old('report_type', $sopc->report_type) == 'tpi') ? 'selected' : '' }}  value="tpi">TPI</option>
+                                                    </select>
+                                                </div>
+
                                                 @php        
                                                     $enter_date = ($sopc->enter_date != '') ? date('d-m-Y', strtotime($sopc->enter_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Enter Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control" id="enter_date" name="enter_date" placeholder="DD-MM-YYYY" value="{{ old('enter_date', $enter_date) }}" disabled>
-                                                    <x-input-error name='enter_date'/>
+                                                    <label for="name1">Enter Date</label>
+                                                    <input type="text" class="form-control" id="enter_date" name="enter_date" placeholder="DD-MM-YYYY" value="{{ old('enter_date', $enter_date) }}" readonly>
                                                 </div>
                                                 @php        
                                                     $issue_date = ($sopc->issue_date != '') ? date('d-m-Y', strtotime($sopc->issue_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Issue Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control" id="issue_date" name="issue_date" placeholder="DD-MM-YYYY" value="{{ old('issue_date', $issue_date) }}" disabled>
-                                                    <x-input-error name='issue_date'/>
+                                                    <label for="name1">Issue Date</label>
+                                                    <input type="text" class="form-control" id="issue_date" name="issue_date" placeholder="DD-MM-YYYY" value="{{ old('issue_date', $issue_date) }}" readonly>
+                                                   
                                                 </div>
                                                 @php        
                                                     $started_date = ($sopc->started_date != '') ? date('d-m-Y', strtotime($sopc->started_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Started Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="started_date" name="started_date" placeholder="DD-MM-YYYY" value="{{ old('started_date', $started_date) }}">
-                                                    <x-input-error name='started_date'/>
+                                                    <label for="name1">Started Date</label>
+                                                    <input type="text" class="form-control date-picker" id="started_date" name="started_date" placeholder="DD-MM-YYYY" value="{{ old('started_date', $started_date) }}" readonly>
                                                 </div>
                                                 @php        
                                                     $due_date = ($sopc->due_date != '') ? date('d-m-Y', strtotime($sopc->due_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Due Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="due_date" name="due_date" placeholder="DD-MM-YYYY" value="{{ old('due_date', $due_date) }}">
-                                                    <x-input-error name='due_date'/>
+                                                    <label for="name1">Due Date</label>
+                                                    <input type="text" class="form-control date-picker" id="due_date" name="due_date" placeholder="DD-MM-YYYY" value="{{ old('due_date', $due_date) }}" readonly>
+                                                    
                                                 </div>
                                                 @php        
                                                     $target_date = ($sopc->target_date != '') ? date('d-m-Y', strtotime($sopc->target_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
-                                                    <label for="name1">Target Date<span class="required">*</span></label>
-                                                    <input type="text" class="form-control date-picker" id="target_date" name="target_date" placeholder="DD-MM-YYYY" value="{{ old('target_date', $target_date) }}">
-                                                    <x-input-error name='target_date'/>
+                                                    <label for="name1">Target Date</label>
+                                                    <input type="text" class="form-control date-picker" id="target_date" name="target_date" placeholder="DD-MM-YYYY" value="{{ old('target_date', $target_date) }}" readonly>
                                                 </div>
                                                 @php        
                                                     $completed_date = ($sopc->completed_date != '') ? date('d-m-Y', strtotime($sopc->completed_date)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Completed Date</label>
-                                                    <input type="text" class="form-control date-picker" id="completed_date" name="completed_date" placeholder="DD-MM-YYYY" value="{{ old('completed_date', $completed_date) }}">
+                                                    <input type="text" class="form-control date-picker" id="completed_date" name="completed_date" placeholder="DD-MM-YYYY" value="{{ old('completed_date', $completed_date) }}" readonly>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Total Items<span class="required">*</span></label>
-                                                    <input type="number" class="form-control" id="total_items" name="total_items" placeholder="Enter Total Items" value="{{ old('total_items', $sopc->total_items) }}" readonly>
+                                                    <input type="number" class="form-control readonly" id="total_items" name="total_items" placeholder="Enter Total Items" value="{{ old('total_items', $sopc->total_items) }}" readonly>
                                                     <x-input-error name='total_items'/>
                                                 </div>
 
@@ -110,7 +118,7 @@
                                                     <label for="name1">Customer<span class="required">*</span></label>
                                                     <select class="form-control" id="customer_id" name="customer_id">
                                                         <option value="">Select Customer</option> 
-                                                        <option value="{{ $sopc->customer_id }}" selected>{{ $sopc->customer->first_name ?? '' }} {{ $sopc->customer->last_name ?? '' }}</option>
+                                                        <option value="{{ $sopc->customer_id }}" selected>{{ $sopc->customer->first_name ?? '' }}</option>
                                                     </select>
                                                     <x-input-error name='customer_id'/>
                                                 </div>
@@ -144,40 +152,85 @@
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Machining</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining', $machining) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="machining" name="machining" placeholder="DD-MM-YYYY" value="{{ old('machining', $machining) }}" readonly>
                                                 </div>
                                                 @php        
                                                     $heat_treatment = ($sopc->heat_treatment != '') ? date('d-m-Y', strtotime($sopc->heat_treatment)) : '';
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Heat Treatment</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment', $heat_treatment) }}">
+                                                    <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment', $heat_treatment) }}" readonly>
                                                 </div>
                                                 @php        
-                                                    $s1_date = ($sopc->s1_date != '') ? date('d-m-Y', strtotime($sopc->s1_date)) : '';
+                                                    $s1_date = $sopc->s1_date;
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">S1</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="s1_date" name="s1_date" placeholder="DD-MM-YYYY" value="{{ old('s1_date', $s1_date) }}">
+                                                    <input type="text" class="form-control" id="s1_date" name="s1_date" placeholder="Enter S1" value="{{ old('s1_date', $s1_date) }}">
                                                 </div>
                                                 @php        
-                                                    $subcon = ($sopc->subcon != '') ? date('d-m-Y', strtotime($sopc->subcon)) : '';
+                                                    $subcon = $sopc->subcon;
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Subcon</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="subcon" name="subcon" placeholder="DD-MM-YYYY" value="{{ old('subcon', $subcon) }}">
+                                                    <input type="text" class="form-control" id="subcon" name="subcon" placeholder="Enter Subcon" value="{{ old('subcon', $subcon) }}">
                                                 </div>
                                                 @php        
-                                                    $stock = ($sopc->stock != '') ? date('d-m-Y', strtotime($sopc->stock)) : '';
+                                                    $stock = $sopc->stock;
                                                 @endphp
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Stock</label>
-                                                    <input type="text" class="form-control date-picker date-permission" id="stock" name="stock" placeholder="DD-MM-YYYY" value="{{ old('stock', $stock) }}">
+                                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="Enter Stock" value="{{ old('stock', $stock) }}">
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Total Value </label>
                                                     <input type="text" class="form-control" id="total_value" name="total_value" placeholder="Enter total value" value="{{ old('total_value', $sopc->total_value) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Fasteners </label>
+                                                    <input type="text" class="form-control" id="fasteners" name="fasteners" placeholder="Enter Fasteners" value="{{ old('fasteners', $sopc->fasteners) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Gasket </label>
+                                                    <input type="text" class="form-control" id="gasket" name="gasket" placeholder="Enter Gasket" value="{{ old('gasket', $sopc->gasket) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">PTFE </label>
+                                                    <input type="text" class="form-control" id="ptfe" name="ptfe" placeholder="Enter PTFE" value="{{ old('ptfe', $sopc->ptfe) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">S1F </label>
+                                                    <input type="text" class="form-control" id="s1f" name="s1f" placeholder="Enter S1F" value="{{ old('s1f', $sopc->s1f) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">S1G </label>
+                                                    <input type="text" class="form-control" id="s1g" name="s1g" placeholder="Enter S1G" value="{{ old('s1g', $sopc->s1g) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">FIM-PTFE </label>
+                                                    <input type="text" class="form-control" id="fim_ptfe" name="fim_ptfe" placeholder="Enter FIM-PTFE" value="{{ old('fim_ptfe', $sopc->fim_ptfe) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">FIM-ZY </label>
+                                                    <input type="text" class="form-control" id="fim_zy" name="fim_zy" placeholder="Enter FIM-ZY" value="{{ old('fim_zy', $sopc->fim_zy) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Charges </label>
+                                                    <input type="text" class="form-control" id="charges" name="charges" placeholder="Enter Charges" value="{{ old('charges', $sopc->charges) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name1">Hold </label>
+                                                    <input type="text" class="form-control" id="hold" name="hold" placeholder="Enter Hold" value="{{ old('hold', $sopc->hold) }}">
                                                 </div>
 
                                                 <!-- form group 1 -->
@@ -220,8 +273,12 @@
     .add-product__body {
         padding: 10px 28px;
     }
-    input:read-only {
+    .readonly {
         pointer-events : none !important;
+        background-color: #f4f5f7 !important;
+    }
+    input:read-only {
+        background-color:#fff !important;
     }
 </style>
 @endsection
@@ -233,30 +290,27 @@
     let issueDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true
                             };
         $("#issue_date,.date-picker").datepicker(datePickerOptions);
         $("#enter_date").datepicker( {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                                 maxDate: new Date()
                             });
 
-        $(document).on('change', '#issue_date', function(){
-            issueDate = $('#issue_date').val();
-            $(".date-picker").datepicker( "option", "minDate", new Date(issueDate) );
-        });
+      
 
         var permissionCheck = $('#permission').val();
         
         if(permissionCheck != 1){
             // alert('no permission');
-            $(".date-permission").datepicker().attr('readonly','readonly');    
+            $('#s1_date,#subcon,#stock').addClass('readonly');   
+            $(".date-permission").addClass('readonly');    
         }
-
 
 
         $('#customer_id').select2({
@@ -271,7 +325,7 @@
                     return {
                         results:  $.map(data, function (item) {
                             return {
-                                text: item.first_name+ ' '+ item.last_name +' - '+item.custom_id,
+                                text: item.first_name+ ' - '+item.custom_id,
                                 id: item.id
                             }
                         })

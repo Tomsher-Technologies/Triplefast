@@ -17,7 +17,7 @@ class SopcItems extends Model
     	return $this->belongsTo(SopcReports::class,'sopc_id','id');
     }
 
-    public function updatedBy(){
+    public function updatedUser(){
     	return $this->belongsTo(User::class,'updated_by','id');
     }
 }

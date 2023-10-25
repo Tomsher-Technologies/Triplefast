@@ -78,6 +78,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/sopc/timeline/{id}', [ReportController::class, 'timeline'])->name('sopc.timeline');
     Route::get('/sopc/status/{id}', [ReportController::class, 'sopcStatus'])->name('sopc.status');
     Route::post('/sopc-status-store', [ReportController::class, 'storeStatus'])->name('sopc.status-store');
+    Route::post('/line-cancel', [ReportController::class, 'cancelLine'])->name('line.cancel');
+    Route::post('/line-add', [ReportController::class, 'addNewLine'])->name('line.add');
 
     Route::get('/notifications', [HomeController::class, 'notifications'])->name('notifications');
     Route::get('/cron', [ReportController::class, 'cron'])->name('cron');

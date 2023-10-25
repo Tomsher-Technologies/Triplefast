@@ -29,7 +29,7 @@
                             <div class="col-12">
                                 <div class="card card-default card-md bg-white card-bordered">
                                     <div class="card-header">
-                                        <h6>Sales Order Number: {{ $sopc->so_number ?? '' }}</h6>
+                                        <h6>Sales Order Number: <span class="f-16 {{ $sopc->report_type }}" >{{ $sopc->so_number ?? '' }} </span></h6>
                                     </div>
                                     <div class="card-body">
                                         <div class="card-grid-table table-responsive">
@@ -38,7 +38,7 @@
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Customer Name</span>
-                                                            <p>{{ $sopc->customer->first_name ?? '' }} {{ $sopc->customer->last_name ?? '' }}</p>
+                                                            <p>{{ $sopc->customer->first_name ?? '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Customer ID</span>
@@ -106,11 +106,11 @@
 
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">S1</span>
-                                                            <p>{{ ($sopc->s1_date != '') ? date('d-m-Y',strtotime($sopc->s1_date)) : '' }}</p>
+                                                            <p>{{ $sopc->s1_date ?? '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Subcon</span>
-                                                            <p>{{ ($sopc->subcon != '') ? date('d-m-Y',strtotime($sopc->subcon)) : '' }}</p>
+                                                            <p>{{ $sopc->subcon ?? '' }}</p>
                                                         </td>
                                                     </tr>
 
@@ -118,13 +118,64 @@
                                                         
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Stock</span>
-                                                            <p>{{ ($sopc->stock != '') ? date('d-m-Y',strtotime($sopc->stock)) : '' }}</p>
+                                                            <p>{{ $sopc->stock ?? '' }}</p>
                                                         </td>
 
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Total Value</span>
                                                             <p>{{ $sopc->total_value ?? '' }}</p>
                                                         </td>
+                                                        
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">Fasteners</span>
+                                                            <p>{{ $sopc->fasteners ?? '' }}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="col-sm-12">
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">Gasket</span>
+                                                            <p>{{ $sopc->gasket ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">PTFE</span>
+                                                            <p>{{ $sopc->ptfe ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">S1F</span>
+                                                            <p>{{ $sopc->s1f ?? '' }}</p>
+                                                        </td>
+                                                    </tr>    
+
+                                                    <tr class="col-sm-12">
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">S1G</span>
+                                                            <p>{{ $sopc->s1g ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">FIM-PTFE</span>
+                                                            <p>{{ $sopc->fim_ptfe ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">FIM-ZY</span>
+                                                            <p>{{ $sopc->fim_zy ?? '' }}</p>
+                                                        </td>
+                                                    </tr>    
+
+                                                    <tr class="col-sm-12">
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">Charges</span>
+                                                            <p>{{ $sopc->charges ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">Hold</span>
+                                                            <p>{{ $sopc->hold ?? '' }}</p>
+                                                        </td>
+
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Status </span>
                                                             <p>
@@ -143,8 +194,7 @@
                                                             @endif
                                                             </p>
                                                         </td>
-
-                                                    </tr>
+                                                    </tr>    
 
                                                     <tr class="col-sm-12">
                                                         
@@ -187,7 +237,10 @@
                                     @if($sopc->sopcItems)
                                         @foreach($sopc->sopcItems as $key => $item)
                                         <tr>
-                                            <td class="text-center">{{ $item->line_no }}</td>
+                                            <td class="text-center">
+                                                <b>{{ $item->line_no }}</b>
+                                                @if($item->is_cancelled == 1) <span class="error">(Cancelled)</span> @endif 
+                                            </td>
                                             <td class="text-center">
                                                 @if( $item->status == 1)
                                                 <span class="badge badge-round completed badge-lg">Completed</span>
@@ -196,7 +249,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $item->remark }}</td>
-                                            <td class="text-center">{{ $item->updatedBy->name ?? '' }}</td>
+                                            <td class="text-center">{{ $item->updatedUser->name ?? '' }}</td>
                                             <td class="text-center">{{ ($item->updated_at != NULL) ? date('d-m-Y', strtotime($item->updated_at)) : '' }}</td>
                                         </tr>
                                         @endforeach
@@ -216,6 +269,21 @@
 <style>
     .border{
         border: 1px solid #d1d2da !important;
+    }
+    .hot{
+        color: red !important;
+    }
+    .oem{
+        color: orange !important;
+    }
+    .tpi{
+        color: #008cff !important;
+    }
+    .normal{
+        color : black !important;
+    }
+    .f-16{
+        font-size : 16px !important;
     }
 </style>
 

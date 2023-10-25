@@ -42,50 +42,60 @@ class DateCron extends Command
             foreach($reports as $pack){
                 $mach_date = $pack->machining;
                 if($mach_date != ''){
-                    $machdiff =  strtotime("$mach_date")-strtotime(date("Y-m-d"));
+                    $machdiff =  strtotime($mach_date)-strtotime(date("Y-m-d"));
                     $machdays = round($machdiff / (60 * 60 * 24));
                     if($machdays == 1){
-                        $notification[] = "Machining date for SO Number: ".$pack->so_number." is due on tomorrow.";
+                        $notification[] = "Machining date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
                     }
                 }
 
                 $heat_date = $pack->heat_treatment;
                 if($heat_date != ''){
-                    $heatdiff =  strtotime("$heat_date")-strtotime(date("Y-m-d"));
+                    $heatdiff =  strtotime($heat_date)-strtotime(date("Y-m-d"));
                     $heatdays = round($heatdiff / (60 * 60 * 24));
                     if($heatdays == 1){
-                        $notification[] = "Heat treatment date for SO Number: ".$pack->so_number." is due on tomorrow.";
+                        $notification[] = "Heat treatment date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                    }
+                }
+                
+                $target_date = $pack->target_date;
+                if($target_date != ''){
+                    $targetdiff =  strtotime($target_date)-strtotime(date("Y-m-d"));
+                    $targetdays = round($targetdiff / (60 * 60 * 24));
+                    if($targetdays == 1){
+                        $notification[] = "Target date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
                     }
                 }
 
-                $s1_date = $pack->s1_date;
-                if($s1_date != ''){
-                    $s1diff =  strtotime("$s1_date")-strtotime(date("Y-m-d"));
-                    $s1days = round($s1diff / (60 * 60 * 24));
-                    if($s1days == 1){
-                        $notification[] = "S1 date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
+                // $s1_date = $pack->s1_date;
+                // if($s1_date != ''){
+                //     $s1diff =  strtotime("$s1_date")-strtotime(date("Y-m-d"));
+                //     $s1days = round($s1diff / (60 * 60 * 24));
+                //     if($s1days == 1){
+                //         $notification[] = "S1 date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                //     }
+                // }
 
-                $subcon_date = $pack->subcon;
-                if($subcon_date != ''){
-                    $subcondiff =  strtotime("$subcon_date")-strtotime(date("Y-m-d"));
-                    $subcondays = round($subcondiff / (60 * 60 * 24));
-                    if($subcondays == 1){
-                        $notification[] = "Subcon date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
+                // $subcon_date = $pack->subcon;
+                // if($subcon_date != ''){
+                //     $subcondiff =  strtotime("$subcon_date")-strtotime(date("Y-m-d"));
+                //     $subcondays = round($subcondiff / (60 * 60 * 24));
+                //     if($subcondays == 1){
+                //         $notification[] = "Subcon date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                //     }
+                // }
 
-                $stock_date = $pack->stock;
-                if($stock_date != ''){
-                    $stockdiff =  strtotime("$stock_date")-strtotime(date("Y-m-d"));
-                    $stockdays = round($stockdiff / (60 * 60 * 24));
-                    if($stockdays == 1){
-                        $notification[] = "Stock date for SO Number: ".$pack->so_number." is due on tomorrow.";
-                    }
-                }
+                // $stock_date = $pack->stock;
+                // if($stock_date != ''){
+                //     $stockdiff =  strtotime("$stock_date")-strtotime(date("Y-m-d"));
+                //     $stockdays = round($stockdiff / (60 * 60 * 24));
+                //     if($stockdays == 1){
+                //         $notification[] = "Stock date for SO Number: <b>".$pack->so_number."</b> is due on tomorrow.";
+                //     }
+                // }
             }
             if(!empty($notification)){
+                
                 $notify = [];
     
                 $mailContent['subject'] = "Tomorrow's due dates";
@@ -101,7 +111,9 @@ class DateCron extends Command
                             'created_at' => date('Y-m-d H:i:s')
                         ];
                     }
-                    // dispatch(new SendMail($notuser,$mailContent));
+                    if($notuser['email_notification'] == 1){
+                        dispatch(new SendMail($notuser,$mailContent));
+                    }
                 }
     
                 if(!empty($notify)){

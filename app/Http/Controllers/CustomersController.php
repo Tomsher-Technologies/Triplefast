@@ -51,7 +51,6 @@ class CustomersController extends Controller
         if($search_term){
             $query->Where(function ($query) use ($search_term) {
                 $query->orWhere('customers.first_name', 'LIKE', "%$search_term%")
-                ->orWhere('customers.last_name', 'LIKE', "%$search_term%")
                 ->orWhere('customers.email', 'LIKE', "%$search_term%")
                 ->orWhere('customers.phone_number', 'LIKE', "%$search_term%")
                 ->orWhere('customers.custom_id', 'LIKE', "%$search_term%")
@@ -232,7 +231,6 @@ class CustomersController extends Controller
             if($search){
                 $query->Where(function ($query) use ($search) {
                     $query->orWhere('first_name', 'LIKE', "%$search%")
-                    ->orWhere('last_name', 'LIKE', "%$search%")
                     ->orWhere('custom_id', 'LIKE', "%$search%");   
                 }); 
             }           

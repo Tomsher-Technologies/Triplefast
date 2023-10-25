@@ -40,7 +40,7 @@
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Customer Name</span>
-                                                            <p>{{ $order[0]->customer->first_name ?? '' }} {{ $order[0]->customer->last_name ?? '' }}</p>
+                                                            <p>{{ $order[0]->customer->first_name ?? '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Customer ID</span>

@@ -207,7 +207,7 @@
     let orderDate = '';
     $(document).ready(function() {
         var datePickerOptions = {
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                             };
@@ -313,7 +313,7 @@
                     return {
                         results:  $.map(data, function (item) {
                             return {
-                                text: item.first_name+ ' '+ item.last_name +' - '+item.custom_id,
+                                text: item.first_name+ ' - '+item.custom_id,
                                 id: item.id
                             }
                         })
@@ -383,7 +383,7 @@
         $("#line_need_by_date"+count).rules('add', { required: true });
 
         $(".dynamic_date").removeClass('hasDatepicker').datepicker({
-                                dateFormat: "dd-m-yy",
+                                dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
                             });
