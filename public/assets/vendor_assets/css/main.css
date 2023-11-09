@@ -271,3 +271,17 @@
 .select2-selection__arrow {
     margin-top: 5% !important;
 }
+
+.ui-datepicker-buttonpane{
+    /* margin-top: 10px !important; */
+}
+.ui-datepicker-current{
+    display: none !important;
+}
+.ui-datepicker-close{
+    background: #b3b7c9 !important;
+    border-color: #b3b7c9 !important;
+    float: right !important;
+    border-radius: 10% !important;
+    border-style: solid !important;
+}

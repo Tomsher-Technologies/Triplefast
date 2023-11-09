@@ -10,6 +10,7 @@ use App\Models\SopcUsers;
 use App\Models\User;
 use App\Models\Notifications;
 use App\Models\Customers;
+use App\Models\SopcS1Sub;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SendMail;
@@ -33,6 +34,8 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
+        $request->session()->put('last_url', url()->full());
+
         $search_so_number =  $status_search = $type_search = $dates_search = $customer_id = '';
         $customer = [];
 
@@ -54,7 +57,7 @@ class ReportController extends Controller
         if ($request->has('customer_id')) {
             $customer_id = $request->customer_id;
         }
-       
+   
         $query = SopcReports::with(['customer','createdBy'])->where('is_deleted',0);
 
         if($search_so_number){
@@ -76,6 +79,10 @@ class ReportController extends Controller
             $start_date = date('Y-m-d', strtotime($start_date));
             $end_date = date('Y-m-d', strtotime($end_date));
 
+            if($type_search == 'due'){
+                $query->whereBetween('due_date', [$start_date, $end_date]);
+            }
+
             if($type_search == 'issue'){
                 $query->whereBetween('issue_date', [$start_date, $end_date]);
             }
@@ -89,7 +96,7 @@ class ReportController extends Controller
                 $query->whereBetween('completed_date', [$start_date, $end_date]);
             }
         }
-        $data = $query->sortable(['id' => 'desc'])->paginate(10);
+        $data = $query->sortable(['id' => 'desc'])->paginate(50);
 
         return view('admin.sopc.index',compact('data','search_so_number','status_search','type_search','dates_search','customer'));
     }
@@ -99,7 +106,9 @@ class ReportController extends Controller
      */
     public function create()
     {
-        return view('admin.sopc.create');
+        
+        $customers = getActiveCustomers();
+        return view('admin.sopc.create',compact('customers'));
     }
 
     /**
@@ -150,6 +159,7 @@ class ReportController extends Controller
         $sopc->ptfe             = $request->ptfe ?? NULL;
         $sopc->s1f              = $request->s1f ?? NULL;
         $sopc->s1g              = $request->s1g ?? NULL;
+        $sopc->s1p              = $request->s1p ?? NULL;
         $sopc->fim_ptfe         = $request->fim_ptfe ?? NULL;
         $sopc->fim_zy           = $request->fim_zy ?? NULL;
         $sopc->charges          = $request->charges ?? NULL;
@@ -158,6 +168,42 @@ class ReportController extends Controller
         $sopc->save();
 
         $reportId = $sopc->id;
+
+        $s1_datas = $subcon_datas = [];
+        if ($request->s1_data && $reportId) {
+            foreach ($request->s1_data as $s1_data) {
+                if($s1_data['s1_date'] != '' || $s1_data['s1_content'] != ''){
+                    $s1_datas[] = [
+                        'sopc_id' => $reportId,
+                        'type' => 's1', 
+                        'content_date' => ($s1_data['s1_date'] != '') ? date('Y-m-d', strtotime($s1_data['s1_date'])) : NULL,
+                        'content' => $s1_data['s1_content'],
+                        'created_by' => Auth::user()->id
+                    ];
+                }
+            }
+            if(!empty($s1_datas)){
+                SopcS1Sub::insert($s1_datas);
+            }
+        }
+
+        if ($request->subcon_data && $reportId) {
+            foreach ($request->subcon_data as $subcon_data) {
+                if($subcon_data['subcon'] != '' || $subcon_data['subcon_content'] != ''){
+                    $subcon_datas[] = [
+                        'sopc_id' => $reportId,
+                        'type' => 'subcon', 
+                        'content_date' => ($subcon_data['subcon'] != '') ? date('Y-m-d', strtotime($subcon_data['subcon'])) : NULL,
+                        'content' => $subcon_data['subcon_content'],
+                        'created_by' => Auth::user()->id
+                    ];
+                }
+            }
+            if(!empty($subcon_datas)){
+                SopcS1Sub::insert($subcon_datas);
+            }
+        }
+            
 
         $items = [];
         for($i = 1; $i <= $total_items; $i++){
@@ -179,6 +225,7 @@ class ReportController extends Controller
             'updated_by' => Auth::user()->id,
             'created_at' => date('Y-m-d H:i:s')
         ]);
+
         return redirect()->route('sopc.index')->with(['success' => "SOPC report created succesfully"]);
     }
 
@@ -190,7 +237,27 @@ class ReportController extends Controller
         $sopc = SopcReports::with(['sopcItems'])
                     ->where('is_deleted',0)
                     ->where('id', $id)->first();
-        return view('admin.sopc.view',compact('sopc'));  
+
+        $s1_sub = SopcS1Sub::where('sopc_id', $id)->where('is_deleted',0)->orderBy('id','ASC')->get();
+
+        $s1_data = $subcon_data = [];
+        if(isset($s1_sub[0])){
+            foreach ($s1_sub as $ss) {
+                $arr = [];
+                
+                if($ss->type == 's1'){
+                    $arr['content_date'] = ($ss->content_date != NULL) ? date('d-m-Y', strtotime($ss->content_date)) : '';
+                    $arr['content'] = $ss->content;
+                    $s1_data[] = $arr;
+                }else{
+                    $arr['content_date'] =  ($ss->content_date != NULL) ? date('d-m-Y', strtotime($ss->content_date)) : '';
+                    $arr['content'] = $ss->content;
+                    $subcon_data[] = $arr;
+                }
+            }
+        }
+        
+        return view('admin.sopc.view',compact('sopc','s1_data','subcon_data'));  
     }
 
     /**
@@ -199,7 +266,32 @@ class ReportController extends Controller
     public function edit(string $id)
     {
         $sopc = SopcReports::with(['customer'])->find($id);
-        return view('admin.sopc.edit',compact('sopc'));  
+        $customers = getActiveCustomers();
+
+        $s1_sub = SopcS1Sub::where('sopc_id', $id)->where('is_deleted',0)->get();
+
+        $s1_data = $subcon_data = [];
+       
+        foreach ($s1_sub as $ss) {
+            $arr = [];
+            
+            if($ss->type == 's1'){
+                $arr['s1_id'] = $ss->id;
+                $arr['s1_date'] = ($ss->content_date != NULL) ? date('d-m-Y', strtotime($ss->content_date)) : '';
+                $arr['s1_content'] = $ss->content;
+                $s1_data[] = $arr;
+            }else{
+                $arr['sub_id'] = $ss->id;
+                $arr['subcon'] =  ($ss->content_date != NULL) ? date('d-m-Y', strtotime($ss->content_date)) : '';
+                $arr['subcon_content'] = $ss->content;
+                $subcon_data[] = $arr;
+            }
+        }
+
+        $s1Data = json_encode($s1_data);
+        $subconData = json_encode($subcon_data);
+
+        return view('admin.sopc.edit',compact('sopc','customers','s1Data','subconData'));  
     }
 
     /**
@@ -207,6 +299,7 @@ class ReportController extends Controller
      */
     public function update(Request $request, string $id)
     {
+       
         $validator = Validator::make($request->all(), [
             'so_number'     => 'required|unique:sopc_reports,so_number,'.$id,
             'total_items'   => 'required',
@@ -230,13 +323,13 @@ class ReportController extends Controller
         $old_stock          = trim($sopc->stock);
         $so_num             = $sopc->so_number;
 
-        $target_date    = $request->target_date;
-        $completed_date = $request->completed_date;
-        $machining      = $request->machining;
-        $heat_treatment = $request->heat_treatment;
-        $s1_date        = trim($request->s1_date);
-        $subcon         = trim($request->subcon);
-        $stock          = trim($request->stock);
+        $target_date        = $request->target_date;
+        $completed_date     = $request->completed_date;
+        $machining          = $request->machining;
+        $heat_treatment     = $request->heat_treatment;
+        $s1_date            = trim($request->s1_date);
+        $subcon             = trim($request->subcon);
+        $stock              = trim($request->stock);
 
         $new_target         = ($target_date != '') ? date('Y-m-d', strtotime($target_date)) : NULL;
         $new_completed_date = ($completed_date != '') ? date('Y-m-d', strtotime($completed_date)) : NULL;
@@ -297,19 +390,6 @@ class ReportController extends Controller
             }
         }
 
-        if($old_job_status != $new_job_status){
-            $timeline[] = [
-                'sopc_id' => $id, 
-                'content' => 'Job Status changed to <b>'.$jobStatus[$new_job_status].'</b>' , 
-                'updated_by' => Auth::user()->id,
-                'created_at' => $created_at
-            ];
-            $notifications[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>';
-            if($new_job_status == '2' || $new_job_status == '4'){
-                $mailData[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>';
-            }
-        }
-
         if($old_machining_date != $new_machining_date){
             if($new_machining_date == '' && $old_machining_date != ''){
                 $timeline[] = [
@@ -350,46 +430,6 @@ class ReportController extends Controller
             }
         }
 
-        if($old_s1_date !== $new_s1_date){
-            if($new_s1_date == '' && $old_s1_date != ''){
-                $timeline[] = [
-                    'sopc_id' => $id, 
-                    'content' => 'S1 data removed.' , 
-                    'updated_by' => Auth::user()->id,
-                    'created_at' => $created_at
-                ];
-                $notifications[] = 'S1 data for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }elseif($new_s1_date != ''){
-                $timeline[] = [
-                    'sopc_id' => $id, 
-                    'content' => 'S1 data changed to <b>'.$s1_date.'</b>' , 
-                    'updated_by' => Auth::user()->id,
-                    'created_at' => $created_at
-                ];
-                $notifications[] = 'S1 data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$s1_date.'</b>';
-            } 
-        }
-
-        if($old_subcon !== $new_subcon){
-            if($new_subcon == '' && $old_subcon != ''){
-                $timeline[] = [
-                    'sopc_id' => $id, 
-                    'content' => 'Subcon data removed.' , 
-                    'updated_by' => Auth::user()->id,
-                    'created_at' => $created_at
-                ];
-                $notifications[] = 'Subcon data for SO Number: <b>'.$so_num.'</b> is removed.' ;
-            }elseif($new_subcon != ''){
-                $timeline[] = [
-                    'sopc_id' => $id, 
-                    'content' => 'Subcon data changed to <b>'.$subcon.'</b>' , 
-                    'updated_by' => Auth::user()->id,
-                    'created_at' => $created_at
-                ];
-                $notifications[] = 'Subcon data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subcon.'</b>';
-            }
-        }
-
         if($old_stock !== $new_stock){
             if($new_stock == '' && $old_stock != ''){
                 $timeline[] = [
@@ -407,6 +447,163 @@ class ReportController extends Controller
                     'created_at' => $created_at
                 ];
                 $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$stock.'</b>';
+            }
+        }
+
+        
+
+        $dataOldS1Sub = SopcS1Sub::where('sopc_id', $id)->where('is_deleted',0)->get();
+
+        $idsOldS1Sub = $idsNowS1Sub = $s1Array = $subconArray = [];
+
+        foreach ($dataOldS1Sub as $iS1Sub) {
+            $idsOldS1Sub[] = $iS1Sub->id;
+            if($iS1Sub->type == 's1'){
+                $s1Array[$iS1Sub->id] = $iS1Sub;
+            }elseif($iS1Sub->type == 'subcon'){
+                $subconArray[$iS1Sub->id] = $iS1Sub;
+            }
+        }
+        $detailsS1Sub = []; 
+
+        if ($request->s1_data && $id) {
+            foreach ($request->s1_data as $s1_data) {
+                if($s1_data['s1_date'] != '' || $s1_data['s1_content'] != ''){
+                    $content_date = ($s1_data['s1_date'] != '') ? date('Y-m-d', strtotime($s1_data['s1_date'])) : NULL;
+                    $content = $s1_data['s1_content'];
+
+                    if($s1_data['s1_id'] != '' && $s1_data['s1_id'] != 0){
+                        $idsNowS1Sub[] = $s1_data['s1_id'];
+                        
+                        if(isset($s1Array[$s1_data['s1_id']])){
+                            $oldContentDate = $s1Array[$s1_data['s1_id']]['content_date'] ?? NULL;
+                            $oldContent =  $s1Array[$s1_data['s1_id']]['content'] ?? NULL;
+                            if(($oldContentDate !== $content_date) && ($content_date != '')){
+                                $timeline[] = [
+                                        'sopc_id' => $id, 
+                                        'content' => 'S1 date changed to <b>'.$content_date.'</b>' , 
+                                        'updated_by' => Auth::user()->id,
+                                        'created_at' => $created_at
+                                    ];
+                                $notifications[] = 'S1 date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$content_date.'</b>';
+                            }
+
+                            if(($oldContent !== $content) && ($content != '')){
+                                $timeline[] = [
+                                        'sopc_id' => $id, 
+                                        'content' => 'S1 content changed to <b>'.$content.'</b>' , 
+                                        'updated_by' => Auth::user()->id,
+                                        'created_at' => $created_at
+                                    ];
+                                $notifications[] = 'S1 content for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$content.'</b>';
+                            }
+                        }
+                        
+                        SopcS1Sub::where('id', $s1_data['s1_id'])->update([
+                                                            'type' => 's1', 
+                                                            'content_date' => $content_date,
+                                                            'content' => $content,
+                                                            'updated_by' => Auth::user()->id
+                                                        ]);
+                    }else{
+                        $detailsS1Sub[] = [
+                            'sopc_id' => $id,
+                            'type' => 's1', 
+                            'content_date' => $content_date,
+                            'content' => $content,
+                            'created_by' => Auth::user()->id
+                        ];
+                    }
+                }
+            }
+        }
+
+        if ($request->subcon_data && $id) {
+            foreach ($request->subcon_data as $subcon_data) {
+                if($subcon_data['subcon'] != '' || $subcon_data['subcon_content'] != ''){
+                    $subContent_date = ($subcon_data['subcon'] != '') ? date('Y-m-d', strtotime($subcon_data['subcon'])) : NULL;
+                    $subContent = $subcon_data['subcon_content'];
+
+                    if($subcon_data['sub_id'] != '' && $subcon_data['sub_id'] != 0){
+                        $idsNowS1Sub[] = $subcon_data['sub_id'];
+                        
+                        if(isset($subconArray[$subcon_data['sub_id']])){
+                            $oldSubContentDate = $subconArray[$subcon_data['sub_id']]['content_date'] ?? NULL;
+                            $oldContent =  $subconArray[$subcon_data['sub_id']]['content'] ?? NULL;
+                            if(($oldSubContentDate !== $subContent_date) && ($subContent_date != '')){
+                                $timeline[] = [
+                                        'sopc_id' => $id, 
+                                        'content' => 'Subcon date changed to <b>'.$subContent_date.'</b>' , 
+                                        'updated_by' => Auth::user()->id,
+                                        'created_at' => $created_at
+                                    ];
+                                $notifications[] = 'Subcon date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subContent_date.'</b>';
+                            }
+
+                            if(($oldContent !== $subContent) && ($subContent != '')){
+                                $timeline[] = [
+                                        'sopc_id' => $id, 
+                                        'content' => 'Subcon content changed to <b>'.$subContent.'</b>' , 
+                                        'updated_by' => Auth::user()->id,
+                                        'created_at' => $created_at
+                                    ];
+                                $notifications[] = 'Subcon content for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subContent.'</b>';
+                            }
+                        }
+                        
+                        SopcS1Sub::where('id', $subcon_data['sub_id'])->update([
+                                                            'type' => 'subcon', 
+                                                            'content_date' => $subContent_date,
+                                                            'content' => $subContent,
+                                                            'updated_by' => Auth::user()->id
+                                                        ]);
+                    }else{
+                        $detailsS1Sub[] = [
+                            'sopc_id' => $id,
+                            'type' => 'subcon', 
+                            'content_date' => $subContent_date,
+                            'content' => $subContent,
+                            'created_by' => Auth::user()->id
+                        ];
+                    }
+                }
+            }
+        }
+
+
+        if(!empty($detailsS1Sub)){
+            SopcS1Sub::insert($detailsS1Sub);
+        }
+
+        if(!empty($idsOldS1Sub)){
+            $differenceArray = array_diff($idsOldS1Sub, $idsNowS1Sub);
+            if(!empty($differenceArray)){
+                SopcS1Sub::whereIn('id',$differenceArray)->update(['is_deleted' => 1]);
+            }
+        }
+
+        if($old_job_status != $new_job_status){
+            $timeline[] = [
+                'sopc_id' => $id, 
+                'content' => 'Job Status changed to <b>'.$jobStatus[$new_job_status].'</b>' , 
+                'updated_by' => Auth::user()->id,
+                'created_at' => $created_at
+            ];
+            $notifications[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>';
+            if($new_job_status == '2' || $new_job_status == '4'){
+                $mailData[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>';
+            }
+            if($new_job_status == '4'){
+                SopcItems::where('sopc_id',$id)->where('status',0)->where('is_cancelled',0)->update(['status' => 1]);
+                $messageCont = 'All Lines for SO Number : <b>'.$so_num.'</b> is completed.';
+                $mailData[] = $messageCont;
+                $timeline[] = [
+                    'sopc_id' => $id, 
+                    'content' =>  $messageCont ?? '',
+                    'updated_by' => Auth::user()->id,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                $notifications[] = $messageCont ?? '';
             }
         }
 
@@ -465,6 +662,7 @@ class ReportController extends Controller
         $sopc->ptfe             = $request->ptfe ?? NULL;
         $sopc->s1f              = $request->s1f ?? NULL;
         $sopc->s1g              = $request->s1g ?? NULL;
+        $sopc->s1p              = $request->s1p ?? NULL;
         $sopc->fim_ptfe         = $request->fim_ptfe ?? NULL;
         $sopc->fim_zy           = $request->fim_zy ?? NULL;
         $sopc->charges          = $request->charges ?? NULL;
@@ -472,7 +670,7 @@ class ReportController extends Controller
         $sopc->updated_by       = Auth::user()->id;
         $sopc->save();
 
-        return redirect()->route('sopc.index')->with(['success' => "SOPC report updated succesfully"]);
+        return redirect($request->session()->get('last_url'))->with(['success' => "SOPC report updated succesfully"]);
     }
 
     /**
@@ -717,4 +915,5 @@ class ReportController extends Controller
             $report->save();
         }
     }
+
 }
