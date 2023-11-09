@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Notifications;
+use App\Models\Customers;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -100,6 +101,11 @@ if (!function_exists('timeAgo')) {
 
         return $timeAgo;
     }
+}
+
+function getActiveCustomers(){
+    $customers = Customers::where('is_deleted',0)->where('is_active',1)->orderBy('first_name','ASC')->get();
+    return $customers;
 }
 
 

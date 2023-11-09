@@ -8,7 +8,7 @@
                 <h4 class="text-capitalize breadcrumb-title">View SOPC Report Details</h4>
                 <div class="breadcrumb-action justify-content-center flex-wrap">
                     <div class="action-btn d-flex">
-                        <a class="btn btn-sm btn-primary btn-add" href="{{ route('sopc.index') }}">
+                        <a class="btn btn-sm btn-primary btn-add" href="{{ Session::has('last_url') ? Session::get('last_url') : route('sopc.index') }}">
                             <i class="la la-arrow-left"></i> Back </a>
                     </div>
                 </div>
@@ -104,18 +104,14 @@
                                                             <p>{{ ($sopc->heat_treatment != '') ? date('d-m-Y',strtotime($sopc->heat_treatment)) : '' }}</p>
                                                         </td>
 
-                                                        <td class="order-td col-sm-4">
+                                                        <!-- <td class="order-td col-sm-4">
                                                             <span class="order-view">S1</span>
                                                             <p>{{ $sopc->s1_date ?? '' }}</p>
                                                         </td>
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Subcon</span>
                                                             <p>{{ $sopc->subcon ?? '' }}</p>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr class="col-sm-12">
-                                                        
+                                                        </td> -->
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Stock</span>
                                                             <p>{{ $sopc->stock ?? '' }}</p>
@@ -125,13 +121,13 @@
                                                             <span class="order-view">Total Value</span>
                                                             <p>{{ $sopc->total_value ?? '' }}</p>
                                                         </td>
-                                                        
+                                                    </tr>
+
+                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Fasteners</span>
                                                             <p>{{ $sopc->fasteners ?? '' }}</p>
                                                         </td>
-                                                    </tr>
-                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Gasket</span>
                                                             <p>{{ $sopc->gasket ?? '' }}</p>
@@ -141,36 +137,40 @@
                                                             <span class="order-view">PTFE</span>
                                                             <p>{{ $sopc->ptfe ?? '' }}</p>
                                                         </td>
-
+                                                    </tr>
+                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">S1F</span>
                                                             <p>{{ $sopc->s1f ?? '' }}</p>
                                                         </td>
-                                                    </tr>    
-
-                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">S1G</span>
                                                             <p>{{ $sopc->s1g ?? '' }}</p>
                                                         </td>
-
                                                         <td class="order-td col-sm-4">
-                                                            <span class="order-view">FIM-PTFE</span>
-                                                            <p>{{ $sopc->fim_ptfe ?? '' }}</p>
-                                                        </td>
-
-                                                        <td class="order-td col-sm-4">
-                                                            <span class="order-view">FIM-ZY</span>
-                                                            <p>{{ $sopc->fim_zy ?? '' }}</p>
+                                                            <span class="order-view">S1P</span>
+                                                            <p>{{ $sopc->s1p ?? '' }}</p>
                                                         </td>
                                                     </tr>    
 
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
+                                                            <span class="order-view">FIM-PTFE</span>
+                                                            <p>{{ $sopc->fim_ptfe ?? '' }}</p>
+                                                        </td>
+                                                        <td class="order-td col-sm-4">
+                                                            <span class="order-view">FIM-ZY</span>
+                                                            <p>{{ $sopc->fim_zy ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
                                                             <span class="order-view">Charges</span>
                                                             <p>{{ $sopc->charges ?? '' }}</p>
                                                         </td>
+                                                        
+                                                    </tr>    
 
+                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Hold</span>
                                                             <p>{{ $sopc->hold ?? '' }}</p>
@@ -194,28 +194,98 @@
                                                             @endif
                                                             </p>
                                                         </td>
-                                                    </tr>    
-
-                                                    <tr class="col-sm-12">
-                                                        
-                                                        <td colspan="3" class="order-td col-sm-12">
+                                                        <td class="order-td col-sm-4">
                                                             <span class="order-view">Jobs To Do </span>
                                                             <p>{{ $sopc->jobs_to_do ?? '' }}</p>
                                                         </td>
+                                                    </tr>    
+
+                                                    <tr class="col-sm-12">
+
+                                                        
+                                                        
+                                                        
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-
-
-
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="user-skils col-sm-12 d-flex">
+                <div class="border-bottom-0 col-sm-6">
+                    <div class="card-header border-bottom-0 pt-sm-25 pb-sm-0  px-md-25 px-3">
+                        <div class="profile-header-title">
+                            S1 Data
+                        </div>
+                    </div>
+                    <div class="card-body pt-md-1 pt-0">
+                        <div class="">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody class="f-14">
+                                        <tr>
+                                            <th class="text-center">Date</th>
+                                            <th class=" w-70">Content</th>
+                                        </tr>
+                                        @if($s1_data)
+                                            @foreach($s1_data as $s1Data)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ ($s1Data['content_date'] != NULL) ? date('d-m-Y', strtotime($s1Data['content_date'])) : '' }}
+                                                </td>
+                                                <td class="">
+                                                    {{ $s1Data['content'] ?? ''}}
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-bottom-0 col-sm-6">
+                    <div class="card-header border-bottom-0 pt-sm-25 pb-sm-0  px-md-25 px-3">
+                        <div class="profile-header-title">
+                            Subcon Data
+                        </div>
+                    </div>
+                    <div class="card-body pt-md-1 pt-0">
+                        <div class="">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody class="f-14">
+                                        <tr>
+                                            <th class="text-center">Date</th>
+                                            <th class=" w-70">Content</th>
+                                        </tr>
+                                        @if($subcon_data)
+                                            @foreach($subcon_data as $sub)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ ($sub['content_date'] != NULL) ? date('d-m-Y', strtotime($sub['content_date'])) : '' }}
+                                                </td>
+                                                <td class="">
+                                                    {{ $sub['content'] ?? ''}}
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="user-skils border-bottom-0">
                 <div class="card-header border-bottom-0 pt-sm-25 pb-sm-0  px-md-25 px-3">
                     <div class="profile-header-title">

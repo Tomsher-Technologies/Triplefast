@@ -92,6 +92,7 @@
                                                
                                                 <select class="form-control ih-small ip-light radius-xs b-light px-15"  name="date_type" id="date_type">
                                                     <option {{ $type_search == "" ? 'selected' : '' }} value="">Select Date Type</option> 
+                                                    <option {{ $type_search == "due" ? 'selected' : '' }} value="due">Due Date</option> 
                                                     <option {{ $type_search == "issue" ? 'selected' : '' }} value="issue">Issue Date</option> 
                                                     <option {{ $type_search == "start" ? 'selected' : '' }} value="start">Started Date</option> 
                                                     <option {{ $type_search == "target" ? 'selected' : '' }} value="target">Target Date</option> 
@@ -153,6 +154,9 @@
                                     <span class="userDatatable-title">@sortablelink('target_date', 'Target Date') </span>
                                 </th>
                                 <th class="text-center">
+                                    <span class="userDatatable-title">@sortablelink('due_date','Due Date')</span>
+                                </th>
+                                <th class="text-center">
                                     <span class="userDatatable-title">@sortablelink('completed_date', 'Completed Date') </span>
                                 </th>
                                 <th class="text-center">
@@ -206,7 +210,20 @@
 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($report->completed_date != '') ? date('d-m-Y',strtotime($report->completed_date)) : ''}}
+                                        {{ ($report->due_date != '') ? date('d-m-Y',strtotime($report->due_date)) : ''}}
+                                    </div>
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="userDatatable-content" style="text-transform: none;">
+                                        @php
+                                            $color = '';
+                                            if($report->completed_date > $report->due_date){
+                                                $color = 'error';
+                                            }
+                                        @endphp
+                                            <span class="{{$color}}">{{ ($report->completed_date != '') ? date('d-m-Y',strtotime($report->completed_date)) : ''}}</span>
+                                       
                                     </div>
                                 </td>
 

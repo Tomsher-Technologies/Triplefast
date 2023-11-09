@@ -10,7 +10,7 @@
                 <h4 class="text-capitalize breadcrumb-title">Timeline Details</h4>
                 <div class="breadcrumb-action justify-content-center flex-wrap">
                     <div class="action-btn">
-                        <a class="btn btn-sm btn-primary btn-add" href="{{ route('sopc.index') }}">
+                        <a class="btn btn-sm btn-primary btn-add" href="{{ Session::has('last_url') ? Session::get('last_url') : route('sopc.index') }}">
                             <i class="la la-arrow-left"></i> Back </a>
                     </div>
                 </div>

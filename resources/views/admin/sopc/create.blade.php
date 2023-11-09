@@ -10,7 +10,7 @@
                 <h4 class="text-capitalize breadcrumb-title">Create New SOPC Report</h4>
                 <div class="breadcrumb-action justify-content-center flex-wrap">
                     <div class="action-btn">
-                        <a class="btn btn-sm btn-primary btn-add" href="{{ route('sopc.index') }}">
+                        <a class="btn btn-sm btn-primary btn-add" href="{{ Session::has('last_url') ? Session::get('last_url') : route('sopc.index') }}">
                             <i class="la la-arrow-left"></i> Back </a>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                 <div class="row justify-content-center">
                     <div class="col-sm-12 col-lg-12">
                         <div class="mx-sm-30 mx-20 ">
-                            <form class="form-horizontal repeater" id="saveSopc" action="{{ route('sopc.store') }}" method="POST" autocomplete="off">
+                            <form class="form-horizontal " id="saveSopc" action="{{ route('sopc.store') }}" method="POST" autocomplete="off">
                                 @csrf
                             <!-- Start: card -->
                                 <div class="card add-product p-sm-30 p-20 mb-30">
@@ -103,8 +103,13 @@
 
                                                 <div class="form-group col-sm-6">
                                                     <label for="name1">Customer<span class="required">*</span></label>
-                                                    <select class="form-control" id="customer_id" name="customer_id">
+                                                    <select class="form-control select2" id="customer_id" name="customer_id">
                                                         <option value="">Select Customer</option> 
+                                                        @if($customers)
+                                                            @foreach($customers as $cust)
+                                                                <option @if(old('customer_id') == $cust->id) selected  @endif value="{{ $cust->id }}">{{ $cust->first_name }} - {{ $cust->custom_id }}</option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
                                                     <x-input-error name='customer_id'/>
                                                 </div>
@@ -125,7 +130,7 @@
                                                     <select class="form-control" id="job_status" name="job_status">
                                                         <option {{ old('job_status') == "" ? 'selected' : '' }} value="">Select Status</option> 
                                                         <option {{ old('job_status') == "0" ? 'selected' : '' }} value="0">Not Started</option> 
-                                                        <option {{ old('job_status') == "1" ? 'selected' : '' }}value="1">Started</option> 
+                                                        <option {{ old('job_status') == "1" ? 'selected' : '' }} value="1">Started</option> 
                                                         <option {{ old('job_status') == "2" ? 'selected' : '' }} value="2">Partial</option> 
                                                         <option {{ old('job_status') == "3" ? 'selected' : '' }} value="3">Hold</option> 
                                                         <option {{ old('job_status') == "4" ? 'selected' : '' }} value="4">Completed</option> 
@@ -144,14 +149,52 @@
                                                     <input type="text" class="form-control date-picker date-permission" id="heat_treatment" name="heat_treatment" placeholder="DD-MM-YYYY" value="{{ old('heat_treatment') }}" readonly>
                                                 </div>
 
-                                                <div class="form-group col-sm-6">
-                                                    <label for="name1">S1</label>
-                                                    <input type="text" class="form-control" id="s1_date" name="s1_date" placeholder="Enter S1" value="{{ old('s1_date') }}">
+                                                <div class="repeater_s1 repData col-12  p-10 mb-2">
+                                                    <h6 class="p-10"><u>S1 Data</u></h6>
+                                                    <div data-repeater-list="s1_data" class="col-12">
+                                                        <!-- Start: product body -->
+                                                        <div data-repeater-item class="row">
+                                                            <div class="form-group col-sm-6">
+                                                                <label for="s1_date">S1 Date</label>
+                                                                <input type="text" class="form-control date-picker"  name="s1_date" placeholder="Enter S1" readonly value="{{ old('s1_date') }}">
+                                                            </div>
+
+                                                            <div class="form-group col-sm-6">
+                                                                <label for="s1_content">S1 Content</label>
+                                                                <input type="text" class="form-control" name="s1_content" placeholder="Enter S1 Content" value="{{ old('s1_content') }}">
+                                                            </div>
+                                                            <div class="text-right col-sm-12 d-block">
+                                                                <input data-repeater-delete class="btn btn-danger d-initial" type="button" value="Delete"  style="background-color: #ff4d4f !important; border-color: #ff4d4f;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 mb-10">
+                                                        <input data-repeater-create class="btn btn-primary" type="button" value="Add New S1"  style="background-color: #5f63f2 !important;border-color: #5f63f2;"/>
+                                                    </div>
                                                 </div>
 
-                                                <div class="form-group col-sm-6">
-                                                    <label for="name1">Subcon</label>
-                                                    <input type="text" class="form-control" id="subcon" name="subcon" placeholder="Enter Subcon" value="{{ old('subcon') }}">
+                                                <div class="repeater_sub repData col-12 p-10 mb-2">
+                                                    <h6 class="p-10"><u>Subcon Data</u></h6>
+                                                    <div data-repeater-list="subcon_data" class="col-12">
+                                                        <!-- Start: product body -->
+                                                        <div data-repeater-item class="row">
+                                                            <div class="form-group col-sm-6">
+                                                                <label for="subcon">Subcon Date</label>
+                                                                <input type="text" class="form-control date-picker" name="subcon" readonly placeholder="Enter Subcon" value="{{ old('subcon') }}">
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label for="subcon_content">Subcon Content</label>
+                                                                <input type="text" class="form-control" name="subcon_content" placeholder="Enter Subcon" value="{{ old('subcon_content') }}">
+                                                            </div>
+
+                                                            <div class="text-right col-sm-12 d-block">
+                                                                <input data-repeater-delete class="btn btn-danger d-initial" type="button" value="Delete" style="background-color: #ff4d4f !important; border-color: #ff4d4f;"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 mb-10">
+                                                        <input data-repeater-create class="btn btn-primary" type="button" value="Add New Subcon" style="background-color: #5f63f2 !important;border-color: #5f63f2;"/>
+                                                    </div>
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
@@ -190,6 +233,11 @@
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
+                                                    <label for="name1">S1P </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="s1p" name="s1p" placeholder="Enter S1P" value="{{ old('s1p') }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
                                                     <label for="name1">FIM-PTFE </label>
                                                     <input type="number"  step="0.01" class="form-control" id="fim_ptfe" name="fim_ptfe" placeholder="Enter FIM-PTFE" value="{{ old('fim_ptfe') }}">
                                                 </div>
@@ -221,7 +269,7 @@
                                 <div class="button-group add-product-btn d-flex justify-content-end mt-40">
                                     <button class="btn btn-primary btn-default btn-squared text-capitalize" type="submit">Save
                                     </button>
-                                    <a href="{{ route('sopc.index') }}">
+                                    <a href="{{ Session::has('last_url') ? Session::get('last_url') : route('sopc.index') }}">
                                         <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize"  type="button">Cancel
                                         </button>
                                     </a>
@@ -257,6 +305,10 @@
     input:read-only {
         background-color:#fff !important;
     }
+    .repData{
+        border: 1px solid #979aa1;
+        border-radius: 10px;
+    }
 </style>
 @endsection
 @section('footer')
@@ -269,7 +321,15 @@
                                 dateFormat: "dd-mm-yy",
                                 changeMonth: true,
                                 changeYear: true,
-                                constrainInput: true
+                                constrainInput: true,
+                                showButtonPanel: true,
+                                closeText: 'Clear',
+                                onClose: function (dateText, inst) {
+                                    if ($(window.event.srcElement).hasClass('ui-datepicker-close'))
+                                    {
+                                        document.getElementById(this.id).value = '';
+                                    }
+                                }
                             };
         $("#issue_date,.date-picker").datepicker(datePickerOptions);
         $("#enter_date").datepicker( {
@@ -277,7 +337,15 @@
                                 changeMonth: true,
                                 changeYear: true,
                                 maxDate: new Date(),
-                                constrainInput: true
+                                constrainInput: true,
+                                showButtonPanel: true,
+                                closeText: 'Clear',
+                                onClose: function (dateText, inst) {
+                                    if ($(window.event.srcElement).hasClass('ui-datepicker-close'))
+                                    {
+                                        document.getElementById(this.id).value = '';
+                                    }
+                                }
                             });
 
 
@@ -287,28 +355,44 @@
             $('#s1_date,#subcon,#stock').addClass('readonly');   
             $(".date-permission").addClass('readonly');    
         }
+        $('.select2').select2();
 
-        $('#customer_id').select2({
-            minimumInputLength: 2,
-            width: 'inherit',
-            placeholder: 'Select a customer by Name/Customer ID',
-            ajax: {
-                url: '{{ route("ajax-customers") }}',
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-                    return {
-                        results:  $.map(data, function (item) {
-                            return {
-                                text: item.first_name+ ' - '+item.custom_id,
-                                id: item.id
-                            }
-                        })
-                    };
-                },
-                cache: true
-            }
-        });  
+        let rep_count = 0;
+
+        $('.repeater_s1').repeater({
+            initEmpty: false,
+            show: function(e) {
+                $(this).slideDown();
+                rep_count = parseInt(rep_count) + 1;
+
+                $(this).find('.date-picker').attr("id","s1_date"+rep_count);
+                
+                $(this).find('.date-picker').removeClass('hasDatepicker').datepicker(datePickerOptions);
+            },
+            hide: function(deleteElement) {
+                if (confirm('Are you sure you want to delete this element?')) {
+                    $(this).slideUp(deleteElement);
+                }
+            },
+            isFirstItemUndeletable: true
+        })
+
+        $('.repeater_sub').repeater({
+            initEmpty: false,
+            show: function(e) {
+                $(this).slideDown();
+                rep_count = parseInt(rep_count) + 1;
+                $(this).find('.date-picker').attr("id","sub_date"+rep_count);
+                $(this).find('.date-picker').removeClass('hasDatepicker').datepicker(datePickerOptions);
+            },
+            hide: function(deleteElement) {
+                if (confirm('Are you sure you want to delete this element?')) {
+                    $(this).slideUp(deleteElement);
+                }
+            },
+            isFirstItemUndeletable: true
+        })
+     
     });
    
     

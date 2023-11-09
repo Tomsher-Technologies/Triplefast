@@ -10,7 +10,7 @@ class SopcReports extends Model
 {
     use HasFactory, Sortable;
 
-    public $sortable = ['id','so_number', 'started_date', 'issue_date', 'target_date','completed_date'];
+    public $sortable = ['id','so_number', 'started_date', 'issue_date', 'target_date','completed_date','due_date'];
 
     protected $fillable = [
         'so_number', 'enter_date', 'issue_date', 'started_date', 'due_date', 'target_date', 'completed_date', 'total_items', 'division', 'customer_id', 'po_number', 'jobs_to_do', 'job_status', 'machining', 'heat_treatment', 's1_date', 'subcon', 'stock', 'total_value', 'is_active', 'created_by', 'updated_by'
