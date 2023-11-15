@@ -267,7 +267,7 @@ class CustomersController extends Controller
 
         $the_file = $request->file('customers_file');
         $customers = Customers::where('is_deleted',0)->get()->pluck('custom_id')->toArray();
-        
+       
         $notFound = [];
         $spreadsheet = IOFactory::load($the_file->getRealPath());
         $sheet        = $spreadsheet->getActiveSheet();
@@ -280,6 +280,7 @@ class CustomersController extends Controller
             $customerId = trim($sheet->getCell( 'B' . $row )->getValue());
             if($customerId != ''){
                 if(!in_array($customerId, $customers)){
+                    $customers[] = $customerId;
                     $data[] = [
                         'first_name' => $sheet->getCell( 'A' . $row )->getValue(),
                         'custom_id' => $customerId,
@@ -291,7 +292,8 @@ class CustomersController extends Controller
                     $notFound[] = $customerId;
                 }
             }
-        }
+        } 
+       
         $warning = '' ;
         if(!empty($notFound)){
             $warning .= "The following Customer Id's were already saved in the system ( ".implode(', ',$notFound)." )";
