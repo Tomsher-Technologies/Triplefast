@@ -638,7 +638,7 @@ class ReportController extends Controller
                 Notifications::insert($salesNotify);
             }
         }
-        
+        $sopc->so_number        = $request->so_number;
         $sopc->enter_date       = ($request->enter_date != '') ? date('Y-m-d', strtotime($request->enter_date)) : NULL;
         $sopc->issue_date       = ($request->issue_date != '') ? date('Y-m-d', strtotime($request->issue_date)) : NULL;
         $sopc->started_date     = ($request->started_date != '') ? date('Y-m-d', strtotime($request->started_date)) : NULL;
