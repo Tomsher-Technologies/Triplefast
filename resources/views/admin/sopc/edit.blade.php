@@ -259,6 +259,11 @@
                                                 </div>
 
                                                 <div class="form-group col-sm-6">
+                                                    <label for="name1">Partial Value (Balance) </label>
+                                                    <input type="number"  step="0.01" class="form-control" id="partial" name="partial" placeholder="Enter Partial Value" value="{{ old('partial', $sopc->partial) }}">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
                                                     <label for="name1">FIM-PTFE </label>
                                                     <input type="text" class="form-control" id="fim_ptfe" name="fim_ptfe" placeholder="Enter FIM-PTFE" value="{{ old('fim_ptfe', $sopc->fim_ptfe) }}">
                                                 </div>

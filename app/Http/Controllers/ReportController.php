@@ -160,6 +160,7 @@ class ReportController extends Controller
         $sopc->s1f              = $request->s1f ?? NULL;
         $sopc->s1g              = $request->s1g ?? NULL;
         $sopc->s1p              = $request->s1p ?? NULL;
+        $sopc->partial          = $request->partial ?? NULL;
         $sopc->fim_ptfe         = $request->fim_ptfe ?? NULL;
         $sopc->fim_zy           = $request->fim_zy ?? NULL;
         $sopc->charges          = $request->charges ?? NULL;
@@ -663,6 +664,7 @@ class ReportController extends Controller
         $sopc->s1f              = $request->s1f ?? NULL;
         $sopc->s1g              = $request->s1g ?? NULL;
         $sopc->s1p              = $request->s1p ?? NULL;
+        $sopc->partial          = $request->partial ?? NULL;
         $sopc->fim_ptfe         = $request->fim_ptfe ?? NULL;
         $sopc->fim_zy           = $request->fim_zy ?? NULL;
         $sopc->charges          = $request->charges ?? NULL;
@@ -738,27 +740,48 @@ class ReportController extends Controller
 
         $updatedUser = $request->user;
         $updatedDate = $request->date;
-     
+        
+        $checkItems = SopcItems::where('sopc_id',$sopc_id)->get();
+
+        $oldData = [];
+        if($checkItems){
+            foreach($checkItems as $chItem){
+                $oldData[$chItem->id.'-'.$chItem->line_no]['status'] = $chItem->status;
+                $oldData[$chItem->id.'-'.$chItem->line_no]['remark'] = $chItem->remark;
+            }
+        }
+       
         if(!empty($remarks)){
             $data = [];
             foreach($remarks as $key => $rem){
                 $item_id    = explode('-',$key);
                 $id         = $item_id[0];
                 $line_no    = $item_id[1];
-                $updUser = ($updatedUser[$key] != NULL) ? $updatedUser[$key] : Auth::user()->id;
-                $updDate = ($updatedUser[$key] != NULL) ? date('Y-m-d H:i:s', strtotime($updatedDate[$key])) : date('Y-m-d H:i:s');
+                $newStatus = array_key_exists($key, $status) ? 1 : 0;
+
+                if(($oldData[$key]['status'] != $newStatus) || ($oldData[$key]['remark'] != $rem)){
+                    $updUser = Auth::user()->id;
+                    $updDate = date('Y-m-d H:i:s');
+                }else{
+                    $updUser = (isset($updatedUser[$key])) ? $updatedUser[$key] : NULL;
+                    $updDate = (isset($updatedDate[$key])) ? date('Y-m-d H:i:s', strtotime($updatedDate[$key])) : NULL; 
+                }
+
                 $data[] = [
                         'id'        => $id,
                         'sopc_id'   => $sopc_id,
                         'line_no'   => $line_no,
-                        'status'    => array_key_exists($key, $status) ? 1 : 0,
-                        'updated_by' => (array_key_exists($key, $status) || $rem != '') ? $updUser : NULL,
-                        'updated_at' => (array_key_exists($key, $status) || $rem != '') ? $updDate : NULL,
+                        'status'    => $newStatus,
+                        'updated_by' => $updUser,
+                        'updated_at' => $updDate,
                         'remark'    => $rem, 
                     ];
             }
+
+            
             SopcItems::upsert($data,['id'],['status','remark','updated_by']);
         }
+
 
         $checkItems = SopcItems::where('sopc_id',$sopc_id)->where('status',0)->where('is_cancelled',0)->count();
         
