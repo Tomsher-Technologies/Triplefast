@@ -939,4 +939,12 @@ class ReportController extends Controller
         }
     }
 
+    public function testMail(){
+        $mailContent['subject'] = 'Lines Completed.';
+        $mailContent['message'] = ['All Lines for SO Number : is completed.'];
+        $notuser['name'] ="Test Name";
+        $notuser['email'] ="jishap.tomsher@gmail.com";
+        dispatch(new SendMail($notuser,$mailContent));
+    }
+
 }
