@@ -83,4 +83,5 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/notifications', [HomeController::class, 'notifications'])->name('notifications');
     Route::get('/cron', [ReportController::class, 'cron'])->name('cron');
+    Route::get('/mail', [ReportController::class, 'testMail'])->name('mail');
 });
