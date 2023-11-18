@@ -155,6 +155,11 @@
 
                                                     <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
+                                                            <span class="order-view">Partial Value (Balance)</span>
+                                                            <p>{{ $sopc->partial ?? '' }}</p>
+                                                        </td>
+
+                                                        <td class="order-td col-sm-4">
                                                             <span class="order-view">FIM-PTFE</span>
                                                             <p>{{ $sopc->fim_ptfe ?? '' }}</p>
                                                         </td>
@@ -163,14 +168,14 @@
                                                             <p>{{ $sopc->fim_zy ?? '' }}</p>
                                                         </td>
 
+                                                    </tr>    
+
+                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Charges</span>
                                                             <p>{{ $sopc->charges ?? '' }}</p>
                                                         </td>
-                                                        
-                                                    </tr>    
 
-                                                    <tr class="col-sm-12">
                                                         <td class="order-td col-sm-4">
                                                             <span class="order-view">Hold</span>
                                                             <p>{{ $sopc->hold ?? '' }}</p>
@@ -194,15 +199,15 @@
                                                             @endif
                                                             </p>
                                                         </td>
-                                                        <td class="order-td col-sm-4">
-                                                            <span class="order-view">Jobs To Do </span>
-                                                            <p>{{ $sopc->jobs_to_do ?? '' }}</p>
-                                                        </td>
+                                                        
                                                     </tr>    
 
                                                     <tr class="col-sm-12">
 
-                                                        
+                                                        <td class="order-td col-sm-12 " colspan="3">
+                                                            <span class="order-view">Jobs To Do </span>
+                                                            <p>{{ $sopc->jobs_to_do ?? '' }}</p>
+                                                        </td>
                                                         
                                                         
                                                     </tr>
