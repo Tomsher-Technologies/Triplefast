@@ -20,7 +20,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="userDatatable projectDatatable project-table global-shadow border p-10 bg-white radius-xl w-100 mb-30">
+            <div class=" projectDatatable project-table global-shadow border p-10 bg-white radius-xl w-100 mb-30">
                
                 <div class="table-responsive">
                     <div id="filter-form-container" class="footable-filtering-external footable-filtering-right">
@@ -47,7 +47,7 @@
                                 <th class="text-center">
                                     <span class="userDatatable-title">Sl No</span>
                                 </th>
-                                <th>
+                                <th class="w-70">
                                     <span class="userDatatable-title">Notifications</span>
                                 </th>
                                 <th class="text-center">

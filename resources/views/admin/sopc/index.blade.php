@@ -144,20 +144,24 @@
                                 <th class="text-left white-space-unset w-15">
                                     <span class="userDatatable-title">Customer Name</span>
                                 </th>
-                                <th class="text-center">
+                                <th class="text-center w-10">
                                     <span class="userDatatable-title">@sortablelink('issue_date', 'Issue Date') </span>
                                 </th>
-                                <th class="text-center">
+                                <th class="text-center w-10">
                                     <span class="userDatatable-title">@sortablelink('started_date', 'Started Date') </span>
                                 </th>
-                                <th class="text-center">
-                                    <span class="userDatatable-title">@sortablelink('target_date', 'Target Date') </span>
-                                </th>
-                                <th class="text-center">
+                                <th class="text-center w-10">
                                     <span class="userDatatable-title">@sortablelink('due_date','Due Date')</span>
                                 </th>
-                                <th class="text-center">
+                                <th class="text-center w-10">
+                                    <span class="userDatatable-title">@sortablelink('target_date', 'Target Date') </span>
+                                </th>
+                               
+                                <th class="text-center w-10">
                                     <span class="userDatatable-title">@sortablelink('completed_date', 'Completed Date') </span>
+                                </th>
+                                <th class="text-left white-space-unset w-15">
+                                    <span class="userDatatable-title">Remarks</span>
                                 </th>
                                 <th class="text-center">
                                     <span class="userDatatable-title">Status</span>
@@ -204,16 +208,18 @@
 
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
-                                        {{ ($report->target_date != '') ? date('d-m-Y',strtotime($report->target_date)) : ''}}
-                                    </div>
-                                </td>
-
-                                <td class="text-center">
-                                    <div class="userDatatable-content" style="text-transform: none;">
                                         {{ ($report->due_date != '') ? date('d-m-Y',strtotime($report->due_date)) : ''}}
                                     </div>
                                 </td>
 
+
+                                <td class="text-center">
+                                    <div class="userDatatable-content" style="text-transform: none;">
+                                        {{ ($report->target_date != '') ? date('d-m-Y',strtotime($report->target_date)) : ''}}
+                                    </div>
+                                </td>
+
+                               
                                 <td class="text-center">
                                     <div class="userDatatable-content" style="text-transform: none;">
                                         @php
@@ -224,6 +230,12 @@
                                         @endphp
                                             <span class="{{$color}}">{{ ($report->completed_date != '') ? date('d-m-Y',strtotime($report->completed_date)) : ''}}</span>
                                        
+                                    </div>
+                                </td>
+
+                                <td class="text-left  white-space-unset">
+                                    <div class="userDatatable-content">
+                                        {{ $report->remarks ?? '' }}
                                     </div>
                                 </td>
 

@@ -13,7 +13,7 @@ class SopcReports extends Model
     public $sortable = ['id','so_number', 'started_date', 'issue_date', 'target_date','completed_date','due_date'];
 
     protected $fillable = [
-        'so_number', 'report_type', 'enter_date', 'issue_date', 'started_date', 'due_date', 'target_date', 'completed_date', 'total_items', 'division', 'customer_id', 'po_number', 'jobs_to_do', 'job_status', 'machining', 'heat_treatment', 's1_date', 'subcon', 'stock', 'total_value', 'fasteners', 'gasket', 'ptfe', 's1f', 's1g', 's1p', 'partial', 'fim_ptfe', 'fim_zy', 'charges', 'hold', 'is_active', 'is_deleted', 'created_by', 'updated_by'
+        'so_number', 'report_type', 'enter_date', 'issue_date', 'started_date', 'due_date', 'target_date', 'completed_date', 'total_items', 'division', 'customer_id', 'po_number', 'jobs_to_do', 'job_status', 'machining', 'heat_treatment', 's1_date', 'subcon', 'stock', 'total_value', 'fasteners', 'gasket', 'ptfe', 's1f', 's1g', 's1p', 'partial', 'fim_ptfe', 'fim_zy', 'charges', 'hold', 'is_active', 'is_deleted', 'created_by', 'updated_by','remarks'
     ];
 
     public function customer(){

@@ -204,12 +204,15 @@
 
                                                     <tr class="col-sm-12">
 
-                                                        <td class="order-td col-sm-12 " colspan="3">
+                                                        <td class="order-td col-sm-4 ">
                                                             <span class="order-view">Jobs To Do </span>
                                                             <p>{{ $sopc->jobs_to_do ?? '' }}</p>
                                                         </td>
                                                         
-                                                        
+                                                        <td class="order-td col-sm-8 " colspan="2">
+                                                            <span class="order-view">Remarks </span>
+                                                            <p>{{ $sopc->remarks ?? '' }}</p>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
