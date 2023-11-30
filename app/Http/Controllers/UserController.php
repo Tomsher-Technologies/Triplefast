@@ -128,7 +128,7 @@ class UserController extends Controller
         $user->assignRole($request->role);
 
         if($userId){
-            $profileImage = '';
+            $profileImage = NULL;
             if ($request->hasFile('profile_image')) {
                 $uploadedFile = $request->file('profile_image');
                 $filename =    strtolower(Str::random(2)).time().'.'. $uploadedFile->getClientOriginalName();

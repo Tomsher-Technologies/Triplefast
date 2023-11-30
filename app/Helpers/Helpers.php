@@ -108,6 +108,9 @@ function getActiveCustomers(){
     return $customers;
 }
 
-
+function getCustomerDetails($id){
+    $customer = Customers::where('id',$id)->first();
+    return $customer;
+}
 
 

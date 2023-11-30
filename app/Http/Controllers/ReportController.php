@@ -165,6 +165,7 @@ class ReportController extends Controller
         $sopc->fim_zy           = $request->fim_zy ?? NULL;
         $sopc->charges          = $request->charges ?? NULL;
         $sopc->hold             = $request->hold ?? NULL;
+        $sopc->remarks          = $request->remarks ?? NULL;
         $sopc->created_by       = Auth::user()->id;
         $sopc->save();
 
@@ -346,6 +347,19 @@ class ReportController extends Controller
 
         $timeline = $notifications = $mailData = [];
 
+        $not_po_number = $request->po_number ?? '';
+        $customerData = getCustomerDetails($request->customer_id);
+        $not_customer_name = $customerData->first_name ?? '';
+        $not_customer_id = $customerData->custom_id ?? '';
+
+        $notData = [
+            'po_number' => $not_po_number,
+            'customer_name' => $not_customer_name,
+            'customer_id'   => $not_customer_id
+        ];
+
+        $customer_details = ' (Customer PO# = <b>'.$not_po_number.'</b>, Customer ID = <b>'.$not_customer_id.'</b>, Customer Name = <b>'.$not_customer_name.'</b>)';
+
         if($old_target != $new_target){
             if($new_target == ''){
                 $timeline[] = [
@@ -355,8 +369,8 @@ class ReportController extends Controller
                     'created_at' => $created_at
                 ];
 
-                $notifications[] = 'Target date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-                $mailData[] = 'Target date for SO Number: <b>'.$so_num.'</b> is removed.' ;
+                $notifications[] = 'Target date for SO Number: <b>'.$so_num.'</b> is removed.'.$customer_details ;
+                $mailData[] = 'Target date for SO Number: <b>'.$so_num.'</b> is removed.';
             }else{
                 $timeline[] = [
                     'sopc_id' => $id, 
@@ -364,7 +378,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Target date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$target_date.'</b>';
+                $notifications[] = 'Target date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$target_date.'</b>'.$customer_details ;
                 $mailData[] = 'Target date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$target_date.'</b>';
             }
         }
@@ -377,8 +391,8 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is removed.' ;
-                $mailData[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is removed.' ;
+                $notifications[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is removed.'.$customer_details ;
+                $mailData[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is removed.';
             }else{
                 $timeline[] = [
                     'sopc_id' => $id, 
@@ -386,7 +400,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$completed_date.'</b>';
+                $notifications[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$completed_date.'</b>'.$customer_details ;
                 $mailData[] = 'Completed date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$completed_date.'</b>';
             }
         }
@@ -399,7 +413,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Machining date for SO Number: <b>'.$so_num.'</b> is removed.' ;
+                $notifications[] = 'Machining date for SO Number: <b>'.$so_num.'</b> is removed.'.$customer_details ;
             }elseif($new_machining_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
@@ -407,7 +421,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Machining date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$machining.'</b>';
+                $notifications[] = 'Machining date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$machining.'</b>'.$customer_details ;
             }
         }
 
@@ -419,7 +433,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Heat Treatment date for SO Number: <b>'.$so_num.'</b> is removed.' ;
+                $notifications[] = 'Heat Treatment date for SO Number: <b>'.$so_num.'</b> is removed.'.$customer_details ;
             }elseif($new_heat_date != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
@@ -427,7 +441,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Heat Treatment date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$heat_treatment.'</b>';
+                $notifications[] = 'Heat Treatment date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$heat_treatment.'</b>'.$customer_details ;
             }
         }
 
@@ -439,7 +453,7 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is removed.' ;
+                $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is removed.'.$customer_details ;
             }elseif($new_stock != ''){
                 $timeline[] = [
                     'sopc_id' => $id, 
@@ -447,11 +461,9 @@ class ReportController extends Controller
                     'updated_by' => Auth::user()->id,
                     'created_at' => $created_at
                 ];
-                $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$stock.'</b>';
+                $notifications[] = 'Stock data for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$stock.'</b>'.$customer_details ;
             }
         }
-
-        
 
         $dataOldS1Sub = SopcS1Sub::where('sopc_id', $id)->where('is_deleted',0)->get();
 
@@ -486,7 +498,7 @@ class ReportController extends Controller
                                         'updated_by' => Auth::user()->id,
                                         'created_at' => $created_at
                                     ];
-                                $notifications[] = 'S1 date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$content_date.'</b>';
+                                $notifications[] = 'S1 date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$content_date.'</b>'.$customer_details ;
                             }
 
                             if(($oldContent !== $content) && ($content != '')){
@@ -496,7 +508,7 @@ class ReportController extends Controller
                                         'updated_by' => Auth::user()->id,
                                         'created_at' => $created_at
                                     ];
-                                $notifications[] = 'S1 content for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$content.'</b>';
+                                $notifications[] = 'S1 content for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$content.'</b>'.$customer_details ;
                             }
                         }
                         
@@ -538,7 +550,7 @@ class ReportController extends Controller
                                         'updated_by' => Auth::user()->id,
                                         'created_at' => $created_at
                                     ];
-                                $notifications[] = 'Subcon date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subContent_date.'</b>';
+                                $notifications[] = 'Subcon date for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subContent_date.'</b>'.$customer_details ;
                             }
 
                             if(($oldContent !== $subContent) && ($subContent != '')){
@@ -548,7 +560,7 @@ class ReportController extends Controller
                                         'updated_by' => Auth::user()->id,
                                         'created_at' => $created_at
                                     ];
-                                $notifications[] = 'Subcon content for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subContent.'</b>';
+                                $notifications[] = 'Subcon content for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$subContent.'</b>'.$customer_details ;
                             }
                         }
                         
@@ -590,14 +602,14 @@ class ReportController extends Controller
                 'updated_by' => Auth::user()->id,
                 'created_at' => $created_at
             ];
-            $notifications[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>';
+            $notifications[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>'.$customer_details ;
             if($new_job_status == '2' || $new_job_status == '4'){
                 $mailData[] = 'Job Status for SO Number: <b>'.$so_num.'</b> is changed to <b>'.$jobStatus[$new_job_status].'</b>';
             }
             if($new_job_status == '4'){
                 SopcItems::where('sopc_id',$id)->where('status',0)->where('is_cancelled',0)->update(['status' => 1]);
-                $messageCont = 'All Lines for SO Number : <b>'.$so_num.'</b> is completed.';
-                $mailData[] = $messageCont;
+                $messageCont = 'All Lines for SO Number : <b>'.$so_num.'</b> is completed.'.$customer_details ;
+                $mailData[] = 'All Lines for SO Number : <b>'.$so_num.'</b> is completed.';
                 $timeline[] = [
                     'sopc_id' => $id, 
                     'content' =>  $messageCont ?? '',
@@ -617,7 +629,7 @@ class ReportController extends Controller
 
             $mailContent['subject'] = 'SO Number : '.$so_num.' details updated.';
             $mailContent['message'] = $mailData;
-
+            $mailContent['extra']   = $notData;
 
             $notify_users = User::where('user_type',4)->where('is_deleted',0)->where('is_active',1)
                                 ->get()->toArray();
@@ -669,6 +681,7 @@ class ReportController extends Controller
         $sopc->fim_zy           = $request->fim_zy ?? NULL;
         $sopc->charges          = $request->charges ?? NULL;
         $sopc->hold             = $request->hold ?? NULL;
+        $sopc->remarks          = $request->remarks ?? NULL;
         $sopc->updated_by       = Auth::user()->id;
         $sopc->save();
 
@@ -789,8 +802,22 @@ class ReportController extends Controller
             $salesNotify = [];
             $sopcReport = SopcReports::find($sopc_id);
 
+            $not_po_number = $sopcReport->po_number ?? '';
+            $customerData = getCustomerDetails($sopcReport->customer_id);
+            $not_customer_name = $customerData->first_name ?? '';
+            $not_customer_id = $customerData->custom_id ?? '';
+
+            $customer_details = ' (Customer PO# = <b>'.$not_po_number.'</b>, Customer ID = <b>'.$not_customer_id.'</b>, Customer Name = <b>'.$not_customer_name.'</b>)';
+    
+            $notData = [
+                'po_number' => $not_po_number,
+                'customer_name' => $not_customer_name,
+                'customer_id'   => $not_customer_id
+            ];
+
             $mailContent['subject'] = 'SO Number : '.$sopcReport->so_number.' Lines Completed.';
             $mailContent['message'] = ['All Lines for SO Number : <b>'.$sopcReport->so_number.'</b> is completed.'];
+            $mailContent['extra']   = $notData;
 
             SopcTimelines::create([
                 'sopc_id' => $sopc_id, 
@@ -808,7 +835,7 @@ class ReportController extends Controller
                 }
                 $salesNotify[] = [
                     'user_id' => $notuser['id'],
-                    'content' => $mailContent['message'][0] ?? '',
+                    'content' => 'All Lines for SO Number : <b>'.$sopcReport->so_number.'</b> is completed.'.$customer_details,
                     'created_at' => date('Y-m-d H:i:s')
                 ];
             }
@@ -940,10 +967,11 @@ class ReportController extends Controller
     }
 
     public function testMail(){
-        $mailContent['subject'] = 'Lines Completed.';
-        $mailContent['message'] = ['All Lines for SO Number : is completed.'];
+        $mailContent['subject'] = 'Test mail';
+        $mailContent['message'] = ['Test mail'];
+        $mailContent['extra'] = [];
         $notuser['name'] ="Test Name";
-        $notuser['email'] ="jishap.tomsher@gmail.com";
+        echo $notuser['email'] ="jishap.tomsher@gmail.com";
         dispatch(new SendMail($notuser,$mailContent));
     }
 

@@ -100,6 +100,7 @@ class DateCron extends Command
     
                 $mailContent['subject'] = "Tomorrow's due dates";
                 $mailContent['message'] = $notification;
+                $mailContent['extra']   = [];
     
                 $notify_users = User::where('user_type','3')->where('is_deleted',0)->where('is_active',1)->get()->toArray();
                

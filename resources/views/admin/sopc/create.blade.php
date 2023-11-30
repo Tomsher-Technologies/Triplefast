@@ -262,6 +262,11 @@
                                                     <input type="number"  step="0.01" class="form-control" id="hold" name="hold" placeholder="Enter Hold" value="{{ old('hold') }}">
                                                 </div>
 
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name2">Remarks</label>
+                                                    <textarea class="form-control" id="remarks" name="remarks" >{{ old('remarks') }}</textarea>
+                                                </div>
+
                                                 
                                                 <!-- form group 1 -->
                                                 

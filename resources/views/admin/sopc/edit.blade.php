@@ -283,6 +283,11 @@
                                                     <input type="text" class="form-control" id="hold" name="hold" placeholder="Enter Hold" value="{{ old('hold', $sopc->hold) }}">
                                                 </div>
 
+                                                <div class="form-group col-sm-6">
+                                                    <label for="name2">Remarks</label>
+                                                    <textarea class="form-control" id="remarks" name="remarks" >{{ old('remarks', $sopc->remarks) }}</textarea>
+                                                </div>
+
                                                 <!-- form group 1 -->
                                                 
                                             <!-- End: form -->
