@@ -88,6 +88,12 @@
 
                                         <div class="col-sm-6 col-md-4">
                                             <div class="form-group">
+                                                <label for="po_number" class="il-gray fs-14 fw-500 align-center">Customer PO. NO.</label>
+                                                <input type="text" class="form-control ih-small ip-light radius-xs b-light px-15" placeholder="Search with Customer PO. NO." id="po_number" name="po_number" value="{{ $search_po_number }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <div class="form-group">
                                                 <label for="date_type" class="il-gray fs-14 fw-500 align-center">Date Type</label>
                                                
                                                 <select class="form-control ih-small ip-light radius-xs b-light px-15"  name="date_type" id="date_type">
@@ -108,7 +114,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="col-sm-6 col-md-4" style="transform: translate(0, 35%);">
+                                        <div class="col-sm-12 col-md-12" style="transform: translate(0, 35%);">
                                             <div class="form-group text-center">
                                                 <button class="btn btn-primary btn-sm btn-rounded " style="display: inline-block;"><span data-feather="filter"></span>
                                                     Filter
@@ -142,7 +148,7 @@
                                     <span class="userDatatable-title">@sortablelink('so_number', 'SO Number') </span>
                                 </th>
                                 <th class="text-left white-space-unset w-15">
-                                    <span class="userDatatable-title">Customer Name</span>
+                                    <span class="userDatatable-title">Customer</span>
                                 </th>
                                 <th class="text-center w-10">
                                     <span class="userDatatable-title">@sortablelink('issue_date', 'Issue Date') </span>
@@ -191,6 +197,7 @@
                                 <td class="text-left white-space-unset">
                                     <div class="userDatatable-content">
                                         {{ $report->customer->first_name ?? '' }}
+                                        <br><br><b>(PO. NO. = {{ $report->po_number ?? '' }})</b>
                                     </div>
                                 </td>
                                 

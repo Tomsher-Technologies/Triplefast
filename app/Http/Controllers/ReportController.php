@@ -36,11 +36,14 @@ class ReportController extends Controller
     {
         $request->session()->put('last_url', url()->full());
 
-        $search_so_number =  $status_search = $type_search = $dates_search = $customer_id = '';
+        $search_so_number =  $search_po_number =  $status_search = $type_search = $dates_search = $customer_id = '';
         $customer = [];
 
         if ($request->has('so_number')) {
             $search_so_number = $request->so_number;
+        }
+        if ($request->has('po_number')) {
+            $search_po_number = $request->po_number;
         }
         if ($request->has('status')) {
             $status_search = $request->status;
@@ -62,6 +65,10 @@ class ReportController extends Controller
 
         if($search_so_number){
             $query->where('so_number', 'LIKE', "%$search_so_number%");
+        }
+
+        if($search_po_number){
+            $query->where('po_number', 'LIKE', "%$search_po_number%");
         }
 
         if($status_search != ''){
@@ -98,7 +105,7 @@ class ReportController extends Controller
         }
         $data = $query->sortable(['id' => 'desc'])->paginate(50);
 
-        return view('admin.sopc.index',compact('data','search_so_number','status_search','type_search','dates_search','customer'));
+        return view('admin.sopc.index',compact('data','search_po_number','search_so_number','status_search','type_search','dates_search','customer'));
     }
 
     /**
